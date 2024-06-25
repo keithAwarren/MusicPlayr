@@ -1,6 +1,6 @@
 function Playlists() {
     return (
-        <div>Playlists</div>
+        <div className="screen-container">Playlists</div>
     )
 }
 

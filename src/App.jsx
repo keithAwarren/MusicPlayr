@@ -1,10 +1,10 @@
 import './App.css'
-import Home from './screens/home'
+import Index from './screens/index'
 
 function App() {
   return (
       <div>
-        <Home />
+        <Index />
       </div>
   )
 }
