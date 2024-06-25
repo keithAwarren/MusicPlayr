@@ -1,12 +1,11 @@
 import './App.css'
+import Home from './screens/home'
 
 function App() {
   return (
-    <>
-      <p className="App">
-        Hello World
-      </p>
-    </>
+      <div>
+        <Home />
+      </div>
   )
 }
 
