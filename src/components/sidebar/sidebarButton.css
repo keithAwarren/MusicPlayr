@@ -12,14 +12,21 @@ a {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    transition: all 0.2s ease;
+}
+
+.btn-body.active {
+    background-color: rgba(255, 240, 245, 0.4);
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.btn-body:hover {
+    color: #ffffff;
 }
 
 .btn-title {
     margin: 4px auto;
     font-weight: 600;
     font-size: 14px
-}
-
-.btn-icon {
-    size: 24px;
 }
