@@ -4,3 +4,7 @@
     background-color: rgba(252, 252, 252, 0.668);
     border-radius: 30px;
 }
+
+.flex {
+    display: flex;
+}

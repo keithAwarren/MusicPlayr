@@ -1,0 +1,25 @@
+.library-body {
+    width: 94%;
+    height: 90%;
+    padding: 3%;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    justify-content: space-between;
+}
+
+.playlist-card {
+    width: 15%;
+    height: 37%;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid white;
+    padding: 1%;
+    margin-bottom: 2%;
+    overflow: scroll;
+}
+
+.playlist-image {
+    width: 100%;
+    border-radius: 15px;
+}
