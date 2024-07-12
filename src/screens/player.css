@@ -1,3 +1,4 @@
+/* global */
 .left-player-body {
     width: 68%;
     margin-right: 2%;
@@ -12,9 +13,120 @@
     justify-content: space-between;
 }
 
+/* song card */
 .songCard-body {
     width: 100%;
     height: 62%;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.album-image {
+    width: 80%;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.album-image img {
+    border-radius: 30px;
+    width: 100%;
+}
+
+.album-info-card {
+    margin-top: 20px;
+    width: 80%;
+}
+
+.album-info-card p {
+    margin: 5px auto;
+}
+
+.album-name-container {
+    width: 100%;
+    overflow: hidden;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.498);
+}
+
+.marquee {
+    white-space: nowrap;
+    display: inline-block;
+    animation: marquee 12s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.album-info {
+    font-size: 14px;
+    font-weight: 500;
+    color:rgba(0, 0, 0, 0.498);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.album-release {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.498);
+    margin-top: 10px;
+}
+
+/* queue/up next */
+.queue-container {
+    width: 100%;
+    height: 35%;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.695);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.queue {
+    height: 85%;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.up-next {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: left;
+    margin: 10px 0px;
+}
+
+.queue-list {
+    height: 80%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.queue-item {
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px 0px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.queue-item p {
+    margin: 0px;
+}
+
+.track-name {
+    width: 75%;
+    text-overflow: ellipsis;
 }
