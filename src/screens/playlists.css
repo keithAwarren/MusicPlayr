@@ -23,3 +23,13 @@
     width: 100%;
     border-radius: 15px;
 }
+
+.playlist-title {
+    font-size: 16px;
+    margin: 10px 0px 0px;
+}
+
+.playlist-subtitle {
+    font-size: 12px;
+    margin: 0px;
+}

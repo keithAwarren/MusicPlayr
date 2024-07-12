@@ -25,9 +25,9 @@ function Playlists() {
                             src={playlist.images[0].url}
                             className="playlist-image" 
                         />
-                        <p>{playlist.name}</p>
+                        <p className="playlist-title">{playlist.name}</p>
                         {/* Number of songs in playlist */}
-                        <p className="playlist-text">{playlist.tracks.total} Songs</p>
+                        <p className="playlist-subtitle">{playlist.tracks.total} Songs</p>
                     </div>
                 ))}
             </div>
