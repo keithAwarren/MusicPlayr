@@ -3,7 +3,7 @@ import axios from 'axios';
 const authEndpoint = "https://accounts.spotify.com/en/authorize"; // Base URL for Spotify authorization
 const clientId = "74745c6eaa6c44c9a6fe6ef0e6fa6310"; // Playr App client ID
 const redirectUri = "http://localhost:3000/"; // Redirect URL after login
-const scopes = ["user-library-read", "playlist-read-private"]; // App permissions
+const scopes = ["user-library-read", "playlist-read-private", "streaming", "app-remote-control"]; // App permissions
 
 // Construct the login URL with correct parameters
 // encodeURIComponent ensures special characters are correctly encoded for the URI
