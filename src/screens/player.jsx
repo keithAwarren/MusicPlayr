@@ -4,6 +4,7 @@ import apiClient from "../spotify";
 import SongCard from "../components/songCard";
 import Queue from "../components/queue";
 import "./player.css";
+import AudioPlayer from "../components/audioPlayer";
 
 function Player() {
 
@@ -29,7 +30,9 @@ function Player() {
 
     return (
         <div className="screen-container flex">
-            <div className="left-player-body"></div>
+            <div className="left-player-body">
+                <AudioPlayer currentTrack={currentTrack} />
+            </div>
             <div className="right-player-body">
                 {currentTrack && currentTrack.album ? (
                 <SongCard album={currentTrack.album} />
