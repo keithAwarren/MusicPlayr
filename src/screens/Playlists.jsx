@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../spotify"
-import "./playlists.css"
+import apiClient from "../spotify";
 import { IconContext } from "react-icons";
 import { AiFillPlayCircle } from "react-icons/ai";
+import "./playlists.css";
 
 function Playlists() {
+    
     // State to hold playlists data
     const [playlists, setPlaylists] = useState(null);
 
@@ -20,6 +21,7 @@ function Playlists() {
 
     const navigate = useNavigate();
 
+    // Navigate to the /player route and pass the playlist ID as part of the state
     const playPlaylist = (id) => {
         navigate("/player", { state: { id: id } });
     };

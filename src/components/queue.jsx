@@ -1,6 +1,8 @@
-import "../screens/player.css"
+import "../screens/player.css";
 
 function Queue({ tracks, setCurrentIndex }) {
+
+    // Display list of upcoming tracks and allow selection
     return (
         <div className="queue-container flex">
             <div className="queue flex">

@@ -1,15 +1,15 @@
-// Imports
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "../components/sidebar/sidebar";
 import Playlists from "./Playlists";
 import Player from "./player";
 import Home from "./home";
 import Login from "./login";
-import "./home.css";
 import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
+import "./home.css";
 
 function Index() {
+    
     // State variable to hold the auth token
     const [token, setToken] = useState("");
 

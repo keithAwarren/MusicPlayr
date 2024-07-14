@@ -1,5 +1,6 @@
 function Controls({ isPlaying, setIsPlaying, handleNext, handlePrev, total }) {
     
+    // Display playback buttons and controls for audio player
     return (
         <div className="controls">
             <button onClick={handlePrev}>Previous</button>

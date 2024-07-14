@@ -1,13 +1,14 @@
-import "./sidebar.css"
-import SidebarButton from "./sidebarButton"
+import SidebarButton from "./sidebarButton";
 import { IoHomeSharp } from "react-icons/io5";
 import { BsMusicPlayerFill } from "react-icons/bs";
 import { PiPlaylistFill } from "react-icons/pi";
 import { SlLogin } from "react-icons/sl";
 import { useState, useEffect } from "react";
 import apiClient from "../../spotify";
+import "./sidebar.css";
 
 function Sidebar() {
+    
     // State variable for URL of user's profile IMG
     const [image, setImage] = useState(
         "https://picsum.photos/id/237/200/300" // Default IMG

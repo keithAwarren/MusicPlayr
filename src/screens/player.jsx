@@ -3,8 +3,8 @@ import { useLocation } from "react-router-dom"
 import apiClient from "../spotify";
 import SongCard from "../components/songCard";
 import Queue from "../components/queue";
-import "./player.css";
 import AudioPlayer from "../components/audioPlayer";
+import "./player.css";
 
 function Player() {
 
@@ -20,8 +20,8 @@ function Player() {
             apiClient
             .get("playlists/" + location.state?.id + "/tracks")
             .then((res) => {
-                setTracks(res.data.items);
-                setCurrentTrack(res.data?.items[0]?.track);
+                setTracks(res.data.items); // Update the list of tracks
+                setCurrentTrack(res.data?.items[0]?.track); // Set first track in playlist as current
             });
         }
     }, [location.state]);

@@ -3,6 +3,7 @@ import { IconContext } from "react-icons";
 import "./sidebarButton.css";
 
 function SidebarButton({to, title, icon, onClick}) {
+    
     // Access current URL
     const location = useLocation();
 
