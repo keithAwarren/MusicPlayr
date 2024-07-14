@@ -1,4 +1,5 @@
 function Controls({ isPlaying, setIsPlaying, handleNext, handlePrev, total }) {
+    
     return (
         <div className="controls">
             <button onClick={handlePrev}>Previous</button>

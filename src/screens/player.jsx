@@ -8,11 +8,13 @@ import AudioPlayer from "../components/audioPlayer";
 
 function Player() {
 
+    // Hooks to manage the state of the tracks, current track, and current index
     const location = useLocation();
     const [tracks, setTracks] = useState([]);
     const [currentTrack, setCurrentTrack] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    // Fetch track from playlist when the location state changes
     useEffect(() => {
         if (location.state) {
             apiClient
@@ -24,6 +26,7 @@ function Player() {
         }
     }, [location.state]);
 
+    // Update current track when the current index/tracks change
     useEffect(() => {
         setCurrentTrack(tracks[currentIndex]?.track);
     }, [currentIndex, tracks]);
@@ -39,6 +42,7 @@ function Player() {
                 />
             </div>
             <div className="right-player-body">
+                {/* Conditionally render SongCard component in case currentTrack='Undefined' */}
                 {currentTrack && currentTrack.album ? (
                 <SongCard album={currentTrack.album} />
                 ) : (
