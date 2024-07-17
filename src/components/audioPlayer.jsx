@@ -3,8 +3,8 @@ import Controls from "./controls";
 import "../screens/player.css";
 
 function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
-
     const [isPlaying, setIsPlaying] = useState(true);
+    const [currentTime, setCurrentTime] = useState(0);
     const audioSrc = total[currentIndex]?.track.preview_url;
     const audioRef = useRef(new Audio(audioSrc));
     const intervalRef = useRef();
@@ -20,7 +20,7 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     useEffect(() => {
         if (isPlaying && audioRef.current) {
             audioRef.current.play() // Play audio
-            .catch((error) => console.error("Audio play error: ", error));
+                .catch((error) => console.error("Audio play error: ", error));
         } else {
             clearInterval(intervalRef.current); // Clear existing intervals
             audioRef.current.pause(); // Pause audio
@@ -32,14 +32,30 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         if (isReady.current) {
             audioRef.current.pause(); // Pause current audio
             audioRef.current = new Audio(audioSrc); // Create new Audio object for new src
+            setCurrentTime(0); // Reset current time when track changes
             if (isPlaying) {
                 audioRef.current.play() // Play audio
-                .catch((error) => console.error("Audio play error: ", error));
+                    .catch((error) => console.error("Audio play error: ", error));
             }
         } else {
             isReady.current = true;
         }
     }, [audioSrc]);
+
+    // Effect to update current time and setup interval for updating time
+    useEffect(() => {
+        const handleTimeUpdate = () => setCurrentTime(audioRef.current.currentTime);
+
+        if (isPlaying) {
+            intervalRef.current = setInterval(handleTimeUpdate, 1000);
+            audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+        }
+
+        return () => {
+            clearInterval(intervalRef.current);
+            audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+        };
+    }, [isPlaying]);
 
     // Effect to pause audio and clear intervals when the component unmounts
     useEffect(() => {
@@ -67,6 +83,13 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         }
     };
 
+    // Format time in mm:ss format
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
+
     return (
         <div className="audioPlayer-body flex">
             <div className="audioPlayer-left-body">
@@ -75,13 +98,19 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
             <div className="audioPlayer-right-body flex">
                 <p className="song-title">{currentTrack?.name}</p>
                 <p className="song-artist">{artists.join(" | ")}</p>
-                <Controls 
-                    isPlaying={isPlaying} // Pass the play/pause state to Controls
-                    setIsPlaying={setIsPlaying} // Pass function to change play/pause state
-                    handleNext={handleNext} // .. to move to the next track
-                    handlePrev={handlePrev} // .. to move to the previous track
-                    total={total} // Pass list of all tracks
-                />
+                <div className="audioPlayer-right-bottom flex">
+                    <div className="song-duration flex">
+                        <p className="duration">{formatTime(currentTime)}</p>
+                        <p className="duration">0:30</p>
+                    </div>
+                    <Controls
+                        isPlaying={isPlaying}
+                        setIsPlaying={setIsPlaying}
+                        handleNext={handleNext}
+                        handlePrev={handlePrev}
+                        total={total}
+                    />
+                </div>
             </div>
         </div>
     );

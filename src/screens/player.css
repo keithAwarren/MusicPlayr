@@ -32,6 +32,26 @@
     align-items: center;
 }
 
+.audioPlayer-right-bottom {
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+}
+
+.song-duration {
+    width: 50%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.duration {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.6);
+}
+
 .song-title {
     width: 75%;
     text-align: center;
