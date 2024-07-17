@@ -2,7 +2,10 @@ import "../screens/player.css"
 
 function AlbumInfo({ album }) {
 
-    const artists = [];
+    // Empty array to hold names of artists
+    const artists = []; 
+
+    // Check if album and its artists exist, then iterate over each artist to extract their name
     album?.artists?.forEach((element) => {
         artists.push(element.name);
     });

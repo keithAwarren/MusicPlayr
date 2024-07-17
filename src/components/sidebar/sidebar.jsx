@@ -8,15 +8,15 @@ import apiClient from "../../spotify";
 import "./sidebar.css";
 
 function Sidebar() {
-    
+
     // State variable for URL of user's profile IMG
     const [image, setImage] = useState(
         "https://picsum.photos/id/237/200/300" // Default IMG
     );
 
     const handleLogout = () => {
-        window.localStorage.removeItem("token");
-        window.location.href = "/";
+        window.localStorage.removeItem("token"); // Remove token from storage
+        window.location.href = "/"; // Redirecrt to home
     }
 
     useEffect(() => {
