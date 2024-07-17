@@ -19,22 +19,22 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     // Play or pause audio based on the isPlaying state
     useEffect(() => {
         if (isPlaying && audioRef.current) {
-            audioRef.current.play() // Play audio
+            audioRef.current.play()
                 .catch((error) => console.error("Audio play error: ", error));
         } else {
-            clearInterval(intervalRef.current); // Clear existing intervals
-            audioRef.current.pause(); // Pause audio
+            clearInterval(intervalRef.current);
+            audioRef.current.pause();
         }
     }, [isPlaying]);
 
     // Effect to handle when the audio source changes
     useEffect(() => {
         if (isReady.current) {
-            audioRef.current.pause(); // Pause current audio
-            audioRef.current = new Audio(audioSrc); // Create new Audio object for new src
+            audioRef.current.pause();
+            audioRef.current = new Audio(audioSrc);
             setCurrentTime(0); // Reset current time when track changes
             if (isPlaying) {
-                audioRef.current.play() // Play audio
+                audioRef.current.play()
                     .catch((error) => console.error("Audio play error: ", error));
             }
         } else {
@@ -60,8 +60,8 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     // Effect to pause audio and clear intervals when the component unmounts
     useEffect(() => {
         return () => {
-            audioRef.current.pause(); // Pause audio
-            clearInterval(intervalRef.current); // Clear existing intervals
+            audioRef.current.pause();
+            clearInterval(intervalRef.current);
         };
     }, []);
 
@@ -92,15 +92,12 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
 
     return (
         <div className="audioPlayer-body flex">
-            <div className="audioPlayer-left-body">
-                <p>LYRICS</p>
-            </div>
-            <div className="audioPlayer-right-body flex">
                 <p className="song-title">{currentTrack?.name}</p>
                 <p className="song-artist">{artists.join(" | ")}</p>
-                <div className="audioPlayer-right-bottom flex">
+                <div className="audioPlayer-bottom flex">
                     <div className="song-duration flex">
                         <p className="duration">{formatTime(currentTime)}</p>
+                        <div className={`wave ${isPlaying ? 'wave-active' : ''}`}></div>
                         <p className="duration">0:30</p>
                     </div>
                     <Controls
@@ -112,7 +109,6 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
                     />
                 </div>
             </div>
-        </div>
     );
 }
 

@@ -6,7 +6,7 @@ function Controls({ isPlaying, setIsPlaying, handleNext, handlePrev, total }) {
     
     // Display playback buttons and controls for audio player
     return (
-        <IconContext.Provider value={{ size: "35px", color: "white"}}>
+        <IconContext.Provider value={{ size: "40px", color: "rgba(0, 0, 0, 0.6)"}}>
         <div className="controls flex">
             <div className="action-btn flex" onClick={handlePrev}>
                 <IoPlaySkipBack />
