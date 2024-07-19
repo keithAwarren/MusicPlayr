@@ -5,6 +5,7 @@ import SongCard from "../components/songCard";
 import Queue from "../components/queue";
 import AudioPlayer from "../components/audioPlayer";
 import "./player.css";
+import Widgets from "../components/widgets/widgets";
 
 function Player() {
 
@@ -40,6 +41,7 @@ function Player() {
                     currentIndex={currentIndex} 
                     setCurrentIndex={setCurrentIndex}
                 />
+                <Widgets artistID={currentTrack?.album?.artists[0]?.id}/>
             </div>
             <div className="right-player-body">
                 {/* Conditionally render SongCard component in case currentTrack='Undefined' */}
