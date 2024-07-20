@@ -1,8 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../components/sidebar/sidebar";
 import Playlists from "./Playlists";
 import Player from "./player";
-import Home from "./home";
 import Login from "./login";
 import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
@@ -14,7 +13,7 @@ function Index() {
     const [token, setToken] = useState("");
 
     useEffect(() => {
-        const token = window.localStorage.getItem("token") // Get token from local storage
+        const token = window.localStorage.getItem("token"); // Get token from local storage
         const hash = window.location.hash; // Get URL hash containing Spotify token
         window.location.hash = ""; // Clear hash from the URL
 
@@ -32,19 +31,20 @@ function Index() {
 
     // Render Login component if there's no token, otherwise render the main App
     return !token ? (
-        <Login /> // Render the Login componenet if user is not authenticated
+        <Login /> // Render the Login component if user is not authenticated
     ) : (
         <Router>
             <div className="main-body">
                 <Sidebar />
                 <Routes>
-                    <Route path="/" element={<Home />}/>
-                    <Route path="/playlists" element={<Playlists/>}/>
-                    <Route path="/player" element={<Player />}/>
+                    <Route path="/" element={<Navigate to="/playlists" />} /> {/* Redirect root to /playlists */}
+                    <Route path="/playlists" element={<Playlists />} />
+                    <Route path="/player" element={<Player />} />
+                    <Route path="*" element={<Navigate to="/playlists" />} /> {/* Redirect any undefined routes to /playlists */}
                 </Routes>
             </div>
         </Router>
-    )
+    );
 }
 
-export default Index
+export default Index;
