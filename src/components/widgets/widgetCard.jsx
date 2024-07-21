@@ -1,4 +1,3 @@
-import React from "react";
 import WidgetContext from "./widgetContext";
 import "./widgets.css";
 
