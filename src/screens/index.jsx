@@ -5,7 +5,6 @@ import Player from "./player";
 import Login from "./login";
 import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
-import "./home.css";
 
 function Index() {
     
