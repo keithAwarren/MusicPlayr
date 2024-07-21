@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import Controls from './controls';
 import '../screens/player.css';
+import { FaVolumeUp, FaVolumeDown } from 'react-icons/fa';
 
 function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
+    const [volume, setVolume] = useState(0.5); // State for volume
     const audioSrc = total[currentIndex]?.track.preview_url;
     const audioRef = useRef(new Audio());
     const intervalRef = useRef();
@@ -68,6 +70,7 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         if (isReady.current) {
             audioRef.current.pause();
             audioRef.current = new Audio(audioSrc);
+            audioRef.current.volume = volume; // Set initial volume
             setCurrentTime(0);
             if (isPlaying) {
                 audioRef.current.play()
@@ -77,6 +80,11 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
             isReady.current = true;
         }
     }, [audioSrc]);
+
+    // Handle volume change
+    useEffect(() => {
+        audioRef.current.volume = volume;
+    }, [volume]);
 
     // Handle next and previous track
     const handleNext = () => {
@@ -102,6 +110,15 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
+    // Determine the appropriate volume icon
+    const getVolumeIcon = () => {
+        if (volume <= 0.5) {
+            return <FaVolumeDown />;
+        } else {
+            return <FaVolumeUp />;
+        }
+    };    
+
     return (
         <div className="audioPlayer-body flex">
             <p className="song-title">{currentTrack?.name}</p>
@@ -118,6 +135,17 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
                     handleNext={handleNext}
                     handlePrev={handlePrev}
                     total={total}
+                />
+            </div>
+            <div className="volume-control flex">
+                {getVolumeIcon()}
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value={volume} 
+                    onChange={(e) => setVolume(e.target.value)} 
                 />
             </div>
         </div>

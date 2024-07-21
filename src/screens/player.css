@@ -138,6 +138,23 @@
     border: 2px solid rgba(0, 0, 0, 0.2)
 }
 
+.volume-control {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 50%;
+}
+
+.volume-control input[type="range"] {
+    width: 100%;
+    margin: 0 10px;
+}
+
+.volume-control svg {
+    margin-right: 10px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
 /* song card */
 .songCard-body {
     width: 100%;
