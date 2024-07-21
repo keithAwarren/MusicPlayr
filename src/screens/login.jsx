@@ -22,7 +22,7 @@ function Login() {
                         </ul>
                         <h3>How It's Made</h3>
                         <p className="project-technologies">
-                        Playr is crafted using the powerful combination of the React and Vite libraries, seamlessly integrating the Spotify API with Axios for robust data handling. Our stunning animations and styles are inspired by CSSGradient.io and CodePen.io, ensuring an aesthetically pleasing user experience.
+                        Playr is crafted using the powerful combination of the React and Vite libraries, seamlessly integrating the Spotify API with Axios for robust data handling. Animations and styles are inspired by CSSGradient.io and CodePen.io, ensuring an aesthetically pleasing user experience.
                         </p>
                     </div>
                 </div>
