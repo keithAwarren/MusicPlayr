@@ -42,7 +42,7 @@ function Playlists() {
                         />
                         <p className="playlist-title">{playlist.name}</p>
                         {/* Number of songs in playlist */}
-                        <p className="playlist-subtitle">{playlist.tracks.total} Songs</p>
+                        <p className="playlist-subtitle">{playlist.tracks.total} Song(s)</p>
                         <div className="playlist-play">
                             <IconContext.Provider value={{ size: "45px", color: "rgba(255, 125, 222, 0.877)" }}>
                                 <AiFillPlayCircle />

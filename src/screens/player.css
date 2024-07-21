@@ -85,15 +85,18 @@
 
 .song-title {
     width: 75%;
+    max-height: 20%;
+    min-height: 20%;
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.05);
-    padding: 7px;
+    padding: 10px;
     text-align: center;
-    font-size: 50px;
+    font-size: 40px;
     font-weight: bold;
     margin: 0px;
     color: rgba(0, 0, 0, 0.7);
-    border: 2px solid rgba(0, 0, 0, 0.2)
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    overflow: scroll;
 }
 
 .song-artist {
@@ -182,6 +185,7 @@
     white-space: nowrap;
     display: inline-block;
     animation: marquee 12s linear infinite;
+    animation-delay: 5s;
 }
 
 @keyframes marquee {
