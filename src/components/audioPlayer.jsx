@@ -1,38 +1,74 @@
-import { useEffect, useRef, useState } from "react";
-import Controls from "./controls";
-import "../screens/player.css";
+import { useEffect, useRef, useState } from 'react';
+import Controls from './controls';
+import '../screens/player.css';
 
 function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
     const audioSrc = total[currentIndex]?.track.preview_url;
-    const audioRef = useRef(new Audio(audioSrc));
+    const audioRef = useRef(new Audio());
     const intervalRef = useRef();
     const isReady = useRef(false);
 
-    // Collect artists names for current track
+    // Collect artists names for the current track
     const artists = [];
     currentTrack?.album?.artists.forEach((artist) => {
-        artists.push(artist.name); // Add each name to the array
+        artists.push(artist.name);
     });
 
-    // Play or pause audio based on the isPlaying state
+    // Handle audio source changes
     useEffect(() => {
-        if (isPlaying && audioRef.current) {
-            audioRef.current.play()
-                .catch((error) => console.error("Audio play error: ", error));
-        } else {
-            clearInterval(intervalRef.current);
-            audioRef.current.pause();
+        if (audioSrc) {
+            audioRef.current.src = audioSrc;
+            audioRef.current.load();
         }
+    }, [audioSrc]);
+
+    // Play or pause the audio
+    useEffect(() => {
+        const handlePlayPause = async () => {
+            try {
+                if (isPlaying) {
+                    await audioRef.current.play();
+                } else {
+                    audioRef.current.pause();
+                }
+            } catch (error) {
+                console.error("Audio play error: ", error);
+            }
+        };
+
+        handlePlayPause();
+
+        return () => {
+            audioRef.current.pause();
+            clearInterval(intervalRef.current);
+        };
     }, [isPlaying]);
 
-    // Effect to handle when the audio source changes
+    // Update current time and setup interval
+    useEffect(() => {
+        const handleTimeUpdate = () => setCurrentTime(audioRef.current.currentTime);
+
+        if (isPlaying) {
+            intervalRef.current = setInterval(handleTimeUpdate, 1000);
+            audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+        } else {
+            clearInterval(intervalRef.current);
+        }
+
+        return () => {
+            clearInterval(intervalRef.current);
+            audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+        };
+    }, [isPlaying]);
+
+    // Handle track change
     useEffect(() => {
         if (isReady.current) {
             audioRef.current.pause();
             audioRef.current = new Audio(audioSrc);
-            setCurrentTime(0); // Reset current time when track changes
+            setCurrentTime(0);
             if (isPlaying) {
                 audioRef.current.play()
                     .catch((error) => console.error("Audio play error: ", error));
@@ -42,30 +78,7 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         }
     }, [audioSrc]);
 
-    // Effect to update current time and setup interval for updating time
-    useEffect(() => {
-        const handleTimeUpdate = () => setCurrentTime(audioRef.current.currentTime);
-
-        if (isPlaying) {
-            intervalRef.current = setInterval(handleTimeUpdate, 1000);
-            audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-        }
-
-        return () => {
-            clearInterval(intervalRef.current);
-            audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-        };
-    }, [isPlaying]);
-
-    // Effect to pause audio and clear intervals when the component unmounts
-    useEffect(() => {
-        return () => {
-            audioRef.current.pause();
-            clearInterval(intervalRef.current);
-        };
-    }, []);
-
-    // Function to handle playing the next track
+    // Handle next and previous track
     const handleNext = () => {
         if (currentIndex < total.length - 1) {
             setCurrentIndex(currentIndex + 1);
@@ -74,7 +87,6 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         }
     };
 
-    // Function to handle playing the previous track
     const handlePrev = () => {
         if (currentIndex - 1 < 0) {
             setCurrentIndex(total.length - 1);
@@ -92,23 +104,23 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
 
     return (
         <div className="audioPlayer-body flex">
-                <p className="song-title">{currentTrack?.name}</p>
-                <p className="song-artist">{artists.join(" | ")}</p>
-                <div className="audioPlayer-bottom flex">
-                    <div className="song-duration flex">
-                        <p className="duration">{formatTime(currentTime)}</p>
-                        <div className={`wave ${isPlaying ? 'wave-active' : ''}`}></div>
-                        <p className="duration">0:30</p>
-                    </div>
-                    <Controls
-                        isPlaying={isPlaying}
-                        setIsPlaying={setIsPlaying}
-                        handleNext={handleNext}
-                        handlePrev={handlePrev}
-                        total={total}
-                    />
+            <p className="song-title">{currentTrack?.name}</p>
+            <p className="song-artist">{artists.join(" | ")}</p>
+            <div className="audioPlayer-bottom flex">
+                <div className="song-duration flex">
+                    <p className="duration">{formatTime(currentTime)}</p>
+                    <div className={`wave ${isPlaying ? 'wave-active' : ''}`}></div>
+                    <p className="duration">0:30</p>
                 </div>
+                <Controls
+                    isPlaying={isPlaying}
+                    setIsPlaying={setIsPlaying}
+                    handleNext={handleNext}
+                    handlePrev={handlePrev}
+                    total={total}
+                />
             </div>
+        </div>
     );
 }
 

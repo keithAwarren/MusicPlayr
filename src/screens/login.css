@@ -2,28 +2,68 @@
     background-color: #1f1f1f;
     height: 100vh;
     width: 100vw;
-    display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+}
+
+.content-wrapper {
+    justify-content: space-between;
+    width: 90%;
+    height: 80%;
+}
+
+.left-section, .center-section, .right-section {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 33%;
+    padding: 10px;
+    margin: 20px;
+}
+
+.center-section {
+    align-items: center;
 }
 
 .logo {
-    width: 30%;
+    width: 300px;
 }
 
 .login-btn {
     width: 200px;
-    padding: 15px 0px;
+    padding: 15px 0;
     text-align: center;
     background-color: #fefefe;
     border-radius: 50px;
     color: #1f1f1f;
-    font-weight: 60;
-    margin-top: 20%;
+    font-weight: 600;
+    margin-top: 20px;
 }
 
 a {
     text-decoration: none;
+}
+
+.about-project, .about-me {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    width: 80%;
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.keith-photo {
+    width: 200px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.project-description, .project-features, .project-technologies, .me-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    letter-spacing: 0.25px;
+    line-height: 25px;
 }
