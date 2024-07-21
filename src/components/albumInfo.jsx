@@ -17,7 +17,7 @@ function AlbumInfo({ album }) {
                 </div>
             </div>
             <div className="album-info">
-                <p>{`${album?.name || 'Head to the Playlist page and choose a playlist :)'} ${album?.album_type || ''} ${artists.length > 0 ? artists.join(", ") : ''} ${album?.total_tracks || ''} `}</p>
+                <p>{`${album?.name + " is an"|| 'Head to the Playlist page and choose a playlist :)'} ${album?.album_type + " by" || + ""} ${artists.length > 0 ? artists.join(", ") + " with" : ''} ${album?.total_tracks + " track(s)" || ''} `}</p>
             </div>
             <div className="album-release">
                 <p>Release Date: {album?.release_date || 'Unknown Release Date'}</p>
