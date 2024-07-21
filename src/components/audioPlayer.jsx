@@ -6,7 +6,7 @@ import { FaVolumeUp, FaVolumeDown } from 'react-icons/fa';
 function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     const [isPlaying, setIsPlaying] = useState(true);
     const [currentTime, setCurrentTime] = useState(0);
-    const [volume, setVolume] = useState(0.5); // State for volume
+    const [volume, setVolume] = useState(0.5);
     const audioSrc = total[currentIndex]?.track.preview_url;
     const audioRef = useRef(new Audio());
     const intervalRef = useRef();

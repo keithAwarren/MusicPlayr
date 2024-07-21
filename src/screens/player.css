@@ -148,6 +148,7 @@
 .volume-control input[type="range"] {
     width: 100%;
     margin: 0 10px;
+    cursor: pointer;
 }
 
 .volume-control svg {
