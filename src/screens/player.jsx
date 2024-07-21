@@ -71,8 +71,8 @@ function Player() {
             <div className="right-player-body">
                 {currentTrack && currentTrack.album ? (
                     <SongCard album={currentTrack.album} />
-                ) : (
-                    <div>Loading...</div>
+                ) : (                  
+                    <SongCard />
                 )}
                 <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
             </div>
