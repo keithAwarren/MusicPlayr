@@ -33,6 +33,8 @@ a {
 
 .mobile-btn {
     flex-direction: column;
+    padding: 50%;
+    margin: 50%;
 }
 
 @media (max-width: 768px) {

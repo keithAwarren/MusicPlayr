@@ -31,7 +31,7 @@ function Widgets({ artistID, onPlaylistClick, onArtistClick, onAlbumClick }) {
     }, [artistID]);
 
     return (
-        <div className="widgets-body flex">
+        <div className="widgets-body">
             <WidgetCard title="Similar Artists" items={similar} onItemClick={onArtistClick} />
             <WidgetCard title="Made For You" items={featured} onItemClick={onPlaylistClick} />
             <WidgetCard title="New Releases" items={newRelease} onItemClick={onAlbumClick} />

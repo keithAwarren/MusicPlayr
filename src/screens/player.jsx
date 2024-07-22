@@ -55,7 +55,7 @@ function Player() {
     };
 
     return (
-        <div className="screen-container flex">
+        <div className="screen-container flex plater-mobile">
             <div className="left-player-body audioPlayer-mobile">
                 <AudioPlayer
                     currentTrack={currentTrack}

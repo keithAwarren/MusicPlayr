@@ -1,9 +1,11 @@
+/* widgets styles */
 .widgets-body {
     width: 95%;
     height: 50%;
     margin: 2% 3%;
     justify-content: space-evenly;
     align-items: center;
+    display: flex;
 }
 
 .widgetCard-body {
@@ -15,7 +17,7 @@
     overflow-y: scroll;
     background-color: rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 3px 6px 3px rgba(0, 0, 0, 0.3)
+    box-shadow: 3px 6px 3px rgba(0, 0, 0, 0.3);
 }
 
 .widget-title {
@@ -59,19 +61,28 @@
 }
 
 @media (max-width: 768px) {
-   .widgetCard-body {
-    width: 100%;
-    margin: 1%;
-   }
+    .widgets-body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-left: 11px;
+    }
 
-   .context-body {
-    flex-direction: column;
-    text-align: center;
-   }
+    .widgetCard-body {
+        width: 90%;
+        min-height: 100%;
+        margin: 1%;
+        margin-top: 100%;
+    }
 
-   .context-image {
-    height: 70%;
-    width: 70%;
-    margin: auto;
-   }
+    .context-body {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .context-image {
+        height: 55%;
+        width: 55%;
+        margin: auto;
+    }
 }
