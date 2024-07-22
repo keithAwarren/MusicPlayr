@@ -3,46 +3,43 @@ import Controls from './controls';
 import '../screens/player.css';
 
 function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [volume, setVolume] = useState(0.5);
-    const audioSrc = total[currentIndex]?.track.preview_url;
     const audioRef = useRef(new Audio());
     const intervalRef = useRef();
-    const isReady = useRef(false);
 
     // Collect artists names for the current track
-    const artists = [];
-    currentTrack?.album?.artists.forEach((artist) => {
-        artists.push(artist.name);
-    });
+    const artists = currentTrack?.album?.artists.map(artist => artist.name).join(" | ") || "";
 
     // Handle audio source changes
     useEffect(() => {
-        if (audioSrc) {
-            audioRef.current.src = audioSrc;
-            audioRef.current.load();
-        }
-    }, [audioSrc]);
+        const audioElement = audioRef.current;
+        if (audioElement) {
+            audioElement.src = total[currentIndex]?.track.preview_url || '';
+            audioElement.volume = volume;
+            audioElement.load();  // Reload the audio source if necessary
+            setCurrentTime(0);  // Reset current time to start of the new track
 
-    // Play or pause the audio
-    useEffect(() => {
-        const handlePlayPause = async () => {
-            try {
-                if (isPlaying) {
-                    await audioRef.current.play();
-                } else {
-                    audioRef.current.pause();
-                }
-            } catch (error) {
-                console.error("Audio play error: ", error);
+            if (isPlaying) {
+                audioElement.play().catch(error => console.error("Audio play error: ", error));
             }
-        };
+        }
+    }, [currentIndex, total, isPlaying]);  // Only reload the source when currentIndex or isPlaying changes
 
-        handlePlayPause();
+    // Handle play or pause
+    useEffect(() => {
+        const audioElement = audioRef.current;
+        if (audioElement) {
+            if (isPlaying) {
+                audioElement.play().catch(error => console.error("Audio play error: ", error));
+            } else {
+                audioElement.pause();
+            }
+        }
 
         return () => {
-            audioRef.current.pause();
+            audioElement.pause();
             clearInterval(intervalRef.current);
         };
     }, [isPlaying]);
@@ -64,22 +61,6 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
         };
     }, [isPlaying]);
 
-    // Handle track change
-    useEffect(() => {
-        if (isReady.current) {
-            audioRef.current.pause();
-            audioRef.current = new Audio(audioSrc);
-            audioRef.current.volume = volume; // Set initial volume
-            setCurrentTime(0);
-            if (isPlaying) {
-                audioRef.current.play()
-                    .catch((error) => console.error("Audio play error: ", error));
-            }
-        } else {
-            isReady.current = true;
-        }
-    }, [audioSrc]);
-
     // Handle volume change
     useEffect(() => {
         audioRef.current.volume = volume;
@@ -95,10 +76,10 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
     };
 
     const handlePrev = () => {
-        if (currentIndex - 1 < 0) {
-            setCurrentIndex(total.length - 1);
-        } else {
+        if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
+        } else {
+            setCurrentIndex(total.length - 1);
         }
     };
 
@@ -121,19 +102,18 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
                 )}
             </div>
             <p className="song-title">{currentTrack?.name}</p>
-            <p className="song-artist">{artists.join(" | ")}</p>
+            <p className="song-artist">{artists}</p>
             <div className="audioPlayer-bottom flex">
                 <div className="song-duration flex">
                     <p className="duration">{formatTime(currentTime)}</p>
                     <div className={`wave ${isPlaying ? 'wave-active' : ''}`}></div>
-                    <p className="duration">0:30</p>
+                    <p className="duration">{formatTime(audioRef.current.duration || 0)}</p>
                 </div>
                 <Controls
                     isPlaying={isPlaying}
                     setIsPlaying={setIsPlaying}
                     handleNext={handleNext}
                     handlePrev={handlePrev}
-                    total={total}
                     volume={volume}
                     setVolume={setVolume}
                 />
@@ -143,4 +123,3 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
 }
 
 export default AudioPlayer;
-

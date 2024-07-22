@@ -34,7 +34,7 @@ function Controls({ isPlaying, setIsPlaying, handleNext, handlePrev, volume, set
                         max="1" 
                         step="0.01" 
                         value={volume} 
-                        onChange={(e) => setVolume(e.target.value)} 
+                        onChange={(e) => setVolume(parseFloat(e.target.value))} 
                     />
                 </div>
             </div>

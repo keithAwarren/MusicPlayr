@@ -8,6 +8,10 @@
     display: flex;
 }
 
+.widgetCard-body::-webkit-scrollbar {
+    display: none;
+}
+
 .widgetCard-body {
     position: relative;
     width: 24%;

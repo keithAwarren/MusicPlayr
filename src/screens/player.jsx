@@ -15,11 +15,13 @@ function Player() {
 
     useEffect(() => {
         if (location.state) {
-            apiClient
-                .get("playlists/" + location.state?.id + "/tracks")
+            const { id } = location.state;
+            apiClient.get(`playlists/${id}/tracks`)
                 .then((res) => {
-                    setTracks(res.data.items); // Update the list of tracks
-                    setCurrentTrack(res.data?.items[0]?.track); // Set first track in playlist as current
+                    const newTracks = res.data.items;
+                    setTracks(newTracks);
+                    setCurrentIndex(0);
+                    setCurrentTrack(newTracks[0]?.track); 
                 });
         }
     }, [location.state]);
@@ -28,12 +30,11 @@ function Player() {
         setCurrentTrack(tracks[currentIndex]?.track);
     }, [currentIndex, tracks]);
 
-
-    // Functions to handle playing tracks directly from widgets
     const handlePlaylistClick = (playlist) => {
         apiClient.get(`/playlists/${playlist.id}/tracks`)
             .then((res) => {
-                setTracks(res.data.items);
+                const newTracks = res.data.items;
+                setTracks(newTracks);
                 setCurrentIndex(0);
             });
     };
@@ -41,7 +42,8 @@ function Player() {
     const handleArtistClick = (artist) => {
         apiClient.get(`/artists/${artist.id}/top-tracks?market=US`)
             .then((res) => {
-                setTracks(res.data.tracks.map(track => ({ track })));
+                const newTracks = res.data.tracks.map(track => ({ track }));
+                setTracks(newTracks);
                 setCurrentIndex(0);
             });
     };
@@ -49,13 +51,14 @@ function Player() {
     const handleAlbumClick = (album) => {
         apiClient.get(`/albums/${album.id}/tracks`)
             .then((res) => {
-                setTracks(res.data.items.map(track => ({ track })));
+                const newTracks = res.data.items.map(track => ({ track }));
+                setTracks(newTracks);
                 setCurrentIndex(0);
             });
     };
 
     return (
-        <div className="screen-container flex plater-mobile">
+        <div className="screen-container flex player-mobile">
             <div className="left-player-body audioPlayer-mobile">
                 <AudioPlayer
                     currentTrack={currentTrack}
@@ -73,7 +76,7 @@ function Player() {
             <div className="right-player-body songCard-mobile">
                 {currentTrack && currentTrack.album ? (
                     <SongCard album={currentTrack.album} />
-                ) : (                  
+                ) : (
                     <SongCard />
                 )}
                 <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
