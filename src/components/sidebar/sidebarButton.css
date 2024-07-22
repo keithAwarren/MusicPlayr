@@ -30,3 +30,19 @@ a {
     font-weight: 600;
     font-size: 14px
 }
+
+.mobile-btn {
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .mobile-btn {
+       flex-direction: row;
+       padding: 10%;
+       margin: 1%;
+    }
+
+    a {
+        padding: 5%;
+    }
+}

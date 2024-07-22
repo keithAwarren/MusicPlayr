@@ -28,6 +28,8 @@ function Player() {
         setCurrentTrack(tracks[currentIndex]?.track);
     }, [currentIndex, tracks]);
 
+
+    // Functions to handle playing tracks directly from widgets
     const handlePlaylistClick = (playlist) => {
         apiClient.get(`/playlists/${playlist.id}/tracks`)
             .then((res) => {
@@ -54,7 +56,7 @@ function Player() {
 
     return (
         <div className="screen-container flex">
-            <div className="left-player-body">
+            <div className="left-player-body audioPlayer-mobile">
                 <AudioPlayer
                     currentTrack={currentTrack}
                     total={tracks}
@@ -68,7 +70,7 @@ function Player() {
                     onAlbumClick={handleAlbumClick}
                 />
             </div>
-            <div className="right-player-body">
+            <div className="right-player-body songCard-mobile">
                 {currentTrack && currentTrack.album ? (
                     <SongCard album={currentTrack.album} />
                 ) : (                  

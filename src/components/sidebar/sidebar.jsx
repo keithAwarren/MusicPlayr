@@ -38,7 +38,7 @@ function Sidebar() {
                 <div className="welcome-text">
                     Welcome, {username}!
                 </div>
-                <div>
+                <div className="mobile-btn flex">
                     <SidebarButton title="Player" to="/player" icon={<BsMusicPlayerFill />}/>
                     <SidebarButton title="Playlists" to="/playlists" icon={<PiPlaylistFill />}/>
                 </div>
