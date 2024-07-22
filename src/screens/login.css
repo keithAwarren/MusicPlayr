@@ -52,7 +52,7 @@ a {
     border-radius: 10px;
     color: rgba(255, 255, 255, 0.8);
     width: 80%;
-    height: 90%;
+    height: 100%;
     overflow-y: scroll;
 }
 
@@ -93,4 +93,32 @@ a {
 
 .contact-links li {
     margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .login-page {
+        height: auto;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .left-section, .center-section, .right-section {
+        width: 100%;
+        margin: auto;
+        padding: .5%;
+        padding-top: 5%; 
+        padding-bottom: 5%;
+    }
+
+    .keith-photo {
+        width: 100px;
+    }
+
+    .project-description, .project-features, .project-technologies, .me-description {
+        font-size: 12px;
+        line-height: 20px;
+    }
 }

@@ -9,7 +9,7 @@ function Login() {
     return (
         <IconContext.Provider value={{ size: "40px", color: "white"}}>
         <div className="login-page flex">
-            <div className="content-wrappe flex">
+            <div className="content-wrapper flex">
                 <div className="left-section flex">
                     <div className="about-project">
                         <h2>About playr</h2>
