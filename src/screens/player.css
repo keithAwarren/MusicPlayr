@@ -293,6 +293,12 @@
   text-overflow: ellipsis;
 }
 
+@media (min-width: 769px) {
+  .album-art-container {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .left-player-body,
   .right-player-body {
@@ -301,16 +307,29 @@
     height: auto;
   }
 
+  .controls {
+    padding: 1%;
+  }
+
+  .album-art {
+    margin: auto;
+    max-width: 300px;
+  }
+
+  .song-duration {
+    margin: 4%;
+  }
+
   .duration {
     font-size: 15px;
   }
 
   .audioPlayer-body {
     width: 90%;
-    height: 400px;
-    margin: 2% auto;
+    height: 700px;
+    margin: 5% auto;
     justify-content: center;
-    overflow: hidden;
+    overflow: scroll;
   }
 
   .songCard-mobile {
@@ -319,14 +338,19 @@
 
   .song-title {
     min-height: 10%;
-    margin: 5%;
+    margin: 2%;
     margin-top: 5%;
     font-size: 30px;
   }
 
   .song-artist {
     padding: 3%;
-    margin: 5%;
+    margin: 2%;
+  }
+
+  .volume-control svg {
+    margin-right: 10px;
+    color: rgba(0, 0, 0, 0.6);
   }
 
   .action-btn,

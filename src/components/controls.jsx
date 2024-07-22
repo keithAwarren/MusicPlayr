@@ -33,7 +33,7 @@ function Controls({ isPlaying, setIsPlaying, handleNext, handlePrev, volume, set
                         min="0" 
                         max="1" 
                         step="0.01" 
-                        value={volume} 
+                        volume={volume} 
                         onChange={(e) => setVolume(e.target.value)} 
                     />
                 </div>

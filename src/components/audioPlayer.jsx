@@ -111,6 +111,15 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
 
     return (
         <div className="audioPlayer-body flex">
+            <div className="album-art-container">
+                {currentTrack?.album?.images[0]?.url && (
+                    <img 
+                        src={currentTrack.album.images[0].url} 
+                        alt="Album Art" 
+                        className="album-art"
+                    />
+                )}
+            </div>
             <p className="song-title">{currentTrack?.name}</p>
             <p className="song-artist">{artists.join(" | ")}</p>
             <div className="audioPlayer-bottom flex">
@@ -124,9 +133,9 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
                     setIsPlaying={setIsPlaying}
                     handleNext={handleNext}
                     handlePrev={handlePrev}
+                    total={total}
                     volume={volume}
                     setVolume={setVolume}
-                    total={total}
                 />
             </div>
         </div>
@@ -134,3 +143,4 @@ function AudioPlayer({ currentTrack, total, setCurrentIndex, currentIndex }) {
 }
 
 export default AudioPlayer;
+
