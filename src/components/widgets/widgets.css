@@ -71,8 +71,8 @@
     .widgetCard-body {
         width: 90%;
         min-height: 100%;
-        margin: 1%;
-        margin-top: 100%;
+        margin: auto;
+        margin-top: 50%;
     }
 
     .context-body {
