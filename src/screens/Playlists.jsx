@@ -4,8 +4,7 @@ import apiClient from "../spotify";
 import "./playlists.css";
 
 function Playlists() {
-  // State to hold playlists data
-  const [playlists, setPlaylists] = useState(null);
+  const [playlists, setPlaylists] = useState(null); // State to hold playlists data
 
   useEffect(() => {
     // Fetch user's playlists from Spotify API

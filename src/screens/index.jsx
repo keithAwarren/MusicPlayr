@@ -12,8 +12,7 @@ import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
 
 function Index() {
-  // State variable to hold the auth token
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(""); // State variable to hold the auth token
 
   useEffect(() => {
     const token = window.localStorage.getItem("token"); // Get token from local storage
