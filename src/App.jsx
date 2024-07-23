@@ -1,12 +1,12 @@
-import './App.css'
-import Index from './screens/index'
+import "./App.css";
+import Index from "./screens/index";
 
 function App() {
   return (
-      <div>
-        <Index />
-      </div>
-  )
+    <div>
+      <Index />
+    </div>
+  );
 }
 
-export default App
+export default App;
