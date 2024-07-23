@@ -1,6 +1,7 @@
 import "./widgets.css";
 
 function WidgetContext({ title, subtitle, image }) {
+  // Fetch title, subtitle and album image for widgets
   return (
     <div className="context-body flex">
       <img src={image} alt={title} className="context-image" />
