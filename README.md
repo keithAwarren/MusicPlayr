@@ -22,8 +22,8 @@ Playr is a web application built for a simplified playlist player using the Spot
 - **CSS**: For styling the app, ensuring a responsive and visually appealing user experience.
 
 ### Backend 
-- **Spotify Web API**: Provides access to Spotify's music data, including playlists, tracks, and artist information. This API is used to fetch and display music content within the app.
-- **Axios**: A promise-based HTTP client for making requests to the Spotify API. Axios is used to handle data fetching and API interactions.
+- **Spotify Web API**: Provides access to Spotify's music data, including playlists, tracks, and artist information. This API is used to fetch and display music content within the app. [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+- **Axios**: A promise-based HTTP client for making requests to the Spotify API. [Axios](https://axios-http.com/) is used to handle data fetching and API interactions.
 
 ### Deployment
 
@@ -32,10 +32,10 @@ Playr is a web application built for a simplified playlist player using the Spot
 
 ### Tools
 
-- **Prettier**: A code formatter that enforces consistent coding styles across the project.
-- **Cssgradient.io**: A tool for generating and customizing CSS gradients used for styling elements.
-- **Codepen.io**: An online code editor and development environment for testing and showcasing HTML, CSS, and JavaScript snippets.
-- **Pesticide**: A browser extension for visualizing and debugging CSS layout issues by highlighting element borders.
+- **Prettier**: A code formatter that enforces consistent coding styles across the project. [Prettier](https://prettier.io/)
+- **Cssgradient.io**: A tool for generating and customizing CSS gradients used for styling elements. [Cssgradient.io](https://cssgradient.io/)
+- **Codepen.io**: An online code editor and development environment for testing and showcasing HTML, CSS, and JavaScript snippets. [Codepen.io](https://codepen.io/)
+- **Pesticide**: A browser extension for visualizing and debugging CSS layout issues by highlighting element borders. [Pesticide](https://chromewebstore.google.com/detail/pesticide-for-chrome/bakpbgckdnepkmkeaiomhmfcnejndkbi)
 
 ### Development Environment
 
@@ -46,4 +46,4 @@ Playr is a web application built for a simplified playlist player using the Spot
 
 Code can be viewed [here](https://github.com/keithAwarren/MusicPlayr)
 
-Github pages link [here](https://keithawarren.github.io/MusicPlayr/)
+Github pages link [here](https://keithawarren.github.io/MusicPlayr/) **NOTE: User authentication required**
