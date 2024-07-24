@@ -41,3 +41,9 @@ Playr is a web application built for a simplified playlist player using the Spot
 
 - **Node.js**: A JavaScript runtime used for running build tools and managing project dependencies. Node.js is required to run scripts and manage packages.
 - **npm**: The Node.js package manager used to install project dependencies and manage scripts.
+
+## Usage
+
+Code can be viewed [here](https://github.com/keithAwarren/MusicPlayr)
+
+Github pages link [here](https://keithawarren.github.io/MusicPlayr/)
