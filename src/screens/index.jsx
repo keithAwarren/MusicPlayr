@@ -15,16 +15,19 @@ function Index() {
   const [token, setToken] = useState(""); // State variable to hold the auth token
 
   useEffect(() => {
-    const token = window.localStorage.getItem("token"); // Get token from local storage
+    const token = window.localStorage.getItem("spotify_access_token"); // Get token from local storage
     const hash = window.location.hash; // Get URL hash containing Spotify token
     window.location.hash = ""; // Clear hash from the URL
 
     if (!token && hash) {
-      const _token = hash.split("&")[0].split("=")[1]; // Extract token from the hash
-      window.localStorage.setItem("token", _token); // Save token in local storage
+      // Extract token using URLSearchParams for robustness
+      const params = new URLSearchParams(hash.substring(1));
+      const _token = params.get("access_token");
+
+      window.localStorage.setItem("spotify_access_token", _token); // Save token in local storage
       setToken(_token); // Update the state with new token
       setClientToken(_token); // Set token for the API client
-    } else {
+    } else if (token) {
       // If there is already a token in local storage
       setToken(token); // Update the state with the token
       setClientToken(token); // Set the token for the API client

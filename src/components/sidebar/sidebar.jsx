@@ -14,7 +14,7 @@ function Sidebar() {
   const [username, setUsername] = useState(""); // State variable for username
 
   const handleLogout = () => {
-    window.localStorage.removeItem("token"); // Remove token from storage
+    window.localStorage.removeItem("spotify_access_token"); // Remove token from storage
     window.location.href = "/"; // Redirect to home
   };
 
