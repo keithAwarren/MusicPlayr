@@ -4,8 +4,9 @@ import apiClient from "../spotify";
 import SongCard from "../components/songCard";
 import Queue from "../components/queue";
 import AudioPlayer from "../components/audioPlayer";
-import "./player.css";
+import Lyrics from "../components/lyrics";
 import Widgets from "../components/widgets/widgets";
+import "./player.css";
 
 function Player() {
   const location = useLocation(); // Get the current location object from React Router
@@ -79,6 +80,13 @@ function Player() {
           <SongCard /> // Render an empty SongCard component if there's no current track
         )}
         <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
+
+        {/* Render the Lyrics component */}
+        {currentTrack && currentTrack.name && currentTrack.artists ? (
+          <Lyrics trackName={currentTrack.name} artistName={currentTrack.artists[0].name} />
+        ) : (
+          <p>No lyrics available</p>
+        )}
       </div>
     </div>
   );
