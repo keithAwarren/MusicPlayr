@@ -13,6 +13,7 @@ function Player() {
   const [tracks, setTracks] = useState([]); // State to hold the list of tracks
   const [currentTrack, setCurrentTrack] = useState(null); // State to hold the current track being played
   const [currentIndex, setCurrentIndex] = useState(0); // State to hold the index of the current track
+  const userId = localStorage.getItem("userId"); // Retrieve user ID from local storage
 
   // Effect to fetch playlist tracks when the component mounts or the location state changes
   useEffect(() => {
@@ -32,7 +33,7 @@ function Player() {
     setCurrentTrack(tracks[currentIndex]?.track); // Set the current track based on the current index
   }, [currentIndex, tracks]);
 
-  // Functions to handle playlist, artist and album click and fetch tracks from the selected widget
+  // Functions to handle playlist, artist, and album click and fetch tracks from the selected widget
   const handlePlaylistClick = (playlist) => {
     apiClient.get(`/playlists/${playlist.id}/tracks`).then((res) => {
       const newTracks = res.data.items; // Extract the tracks from the response
@@ -57,6 +58,11 @@ function Player() {
     });
   };
 
+  // Debugging: Console logs to check data flow
+  console.log("Tracks loaded:", tracks);
+  console.log("Current Track:", currentTrack);
+  console.log("User ID:", userId);
+
   return (
     <div className="screen-container flex player-mobile">
       <div className="left-player-body audioPlayer-mobile">
@@ -75,9 +81,9 @@ function Player() {
       </div>
       <div className="right-player-body songCard-mobile">
         {currentTrack && currentTrack.album ? (
-          <SongCard album={currentTrack.album} /> // Render the SongCard component with the current track's album
+          <SongCard track={currentTrack} userId={userId} />
         ) : (
-          <SongCard /> // Render an empty SongCard component if there's no current track
+          <p>Track data is unavailable</p>
         )}
         <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
 
