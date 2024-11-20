@@ -1,62 +1,60 @@
-    .filters {
-    margin-bottom: 20px;
-  }
-  
-  .filters button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #00000083;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .filters button.active {
-    background-color: #000000ce;
-  }
-  
-  .filters button:hover {
-    background-color: #afafafb1;
-  }
-  
-  .favorites-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .favorite-item {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: left;
-  }
-  
-  .favorite-item h3 {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  
-  .favorite-item p {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 10px;
-  }
-  
-  .favorite-item button {
-    background-color: #00000083;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .favorite-item button:hover {
-    background-color: #1ed760;
-  }
-  
+/* Dashboard Container */
+.dashboard-container {
+  padding: 0px;
+}
+
+/* Profile Section */
+.dashboard-header {
+  padding: 25px; 
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-profile-img {  
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  margin-right: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.dashboard-title {
+  padding: 20px; 
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.664);
+  font-weight: 600;
+}
+
+/* Filters Section */
+.filters {
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.227);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.filters button.active,
+.filters button:hover {
+  background-color: rgba(0, 0, 0, 0.613);
+}
+
+/* Favorites Section */
+.favorites-list {
+  padding: 20px;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.608);
+}
