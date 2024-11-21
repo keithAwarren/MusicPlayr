@@ -11,7 +11,6 @@ const scopes = [
 ]; // App permissions
 
 // Construct the login URL with correct parameters
-// encodeURIComponent ensures special characters are correctly encoded for the URI
 export const loginEndpoint = `${authEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
   redirectUri
 )}&scope=${encodeURIComponent(

@@ -16,7 +16,7 @@ function Sidebar() {
 
   const handleLogout = () => {
     window.localStorage.removeItem("spotify_access_token"); // Remove token from storage
-    window.location.href = "/"; // Redirect to home
+    window.location.href = "/MusicPlayr/login"; // Redirect to home
   };
 
   useEffect(() => {

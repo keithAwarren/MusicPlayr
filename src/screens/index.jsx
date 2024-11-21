@@ -14,62 +14,64 @@ import { setClientToken } from "../spotify";
 
 function Index() {
   const [token, setToken] = useState("");
-  const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    const hash = window.location.hash; // Get the URL hash (e.g., #access_token=...&user_id=...)
-    const storedToken = localStorage.getItem("spotify_access_token");
-    const storedUserId = localStorage.getItem("userId");
+    // Get the URL hash (e.g., #access_token=...)
+    const hash = window.location.hash;
+    console.log("Raw URL hash:", hash);
 
-    if (!storedToken && !storedUserId && hash) {
-      const query = new URLSearchParams(hash.substring(1)); // Parse the hash (removing #)
+    if (hash) {
+      // Parse the hash (remove the '#' and extract parameters)
+      const query = new URLSearchParams(hash.substring(1));
       const accessToken = query.get("access_token");
-      const user_id = query.get("user_id");
 
-      console.log("Access Token from URL:", accessToken);
-      console.log("User ID from URL:", user_id);
+      console.log("Parsed accessToken:", accessToken);
 
       if (accessToken) {
-        // Save the token to localStorage and state
         localStorage.setItem("spotify_access_token", accessToken);
         setToken(accessToken);
         setClientToken(accessToken);
       }
 
-      if (user_id) {
-        // Save the userId to localStorage and state
-        localStorage.setItem("userId", user_id);
-        setUserId(user_id);
-      }
-
-      // Redirect to the /playlists route and clean the URL
-      //window.history.replaceState(null, null, "/MusicPlayr/playlists");
+      // Clear the hash to prevent re-parsing on refresh
+      window.history.replaceState(null, null, "/MusicPlayr/dashboard");
     } else {
-      // If tokens are already stored, use them
+      // Use stored token if hash is not present
+      const storedToken = localStorage.getItem("spotify_access_token");
+
       if (storedToken) {
         setToken(storedToken);
         setClientToken(storedToken);
       }
-      if (storedUserId) {
-        setUserId(storedUserId);
-      }
     }
   }, []);
 
-  console.log("Rendering with token:", token, "and userId:", userId);
+  console.log("Rendering with token:", token);
 
   return !token ? (
     <Login /> // Show the login screen if no token is found
   ) : (
     <Router>
       <div className="main-body">
-        <Sidebar userId={userId} />
+        <Sidebar />
         <Routes>
-          <Route path="/MusicPlayr/" element={<Navigate to="MusicPlayr/playlists" />} />
-          <Route path="/MusicPlayr/playlists" element={<Playlists userId={userId} />} />
-          <Route path="MusicPlayr/player" element={<Player userId={userId} />} />
-          <Route path="MusicPlayr/dashboard" element={<Dashboard userId={userId} />} />
-          <Route path="*" element={<Navigate to="/MusicPlayr/playlists" />} />
+          <Route
+            path="/MusicPlayr/"
+            element={<Navigate to="MusicPlayr/login" />}
+          />
+          <Route
+            path="/MusicPlayr/playlists"
+            element={<Playlists />}
+          />
+          <Route
+            path="MusicPlayr/player"
+            element={<Player />}
+          />
+          <Route
+            path="MusicPlayr/dashboard"
+            element={<Dashboard />}
+          />
+          <Route path="*" element={<Navigate to="/MusicPlayr/login" />} />
         </Routes>
       </div>
     </Router>
