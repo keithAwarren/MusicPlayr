@@ -61,7 +61,6 @@ function Player() {
   // Debugging: Console logs to check data flow
   console.log("Tracks loaded:", tracks);
   console.log("Current Track:", currentTrack);
-  console.log("User ID:", userId);
 
   return (
     <div className="screen-container flex player-mobile">
@@ -81,7 +80,7 @@ function Player() {
       </div>
       <div className="right-player-body songCard-mobile">
         {currentTrack && currentTrack.album ? (
-          <SongCard track={currentTrack} userId={userId} />
+          <SongCard track={currentTrack} />
         ) : (
           <p>Track data is unavailable</p>
         )}
