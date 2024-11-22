@@ -26,14 +26,18 @@ function Dashboard() {
     fetchUserData();
   }, []);
 
-  // Fetch favorited tracks from the backend
-  const fetchFavoritedTracks = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/favorites/track"); // Adjust the endpoint if needed
-      setFavoritedTracks(response.data); // Update the favorited tracks state
-      setShowFavorites(true); // Show the favorited tracks section
-    } catch (error) {
-      console.error("Error fetching favorited tracks:", error);
+  // Toggle visibility of favorited tracks
+  const toggleFavorites = async () => {
+    if (showFavorites) {
+      setShowFavorites(false); // Hide favorited tracks
+    } else {
+      try {
+        const response = await axios.get("http://localhost:8080/api/favorites/track");
+        setFavoritedTracks(response.data); // Update the favorited tracks state
+        setShowFavorites(true); // Show the favorited tracks section
+      } catch (error) {
+        console.error("Error fetching favorited tracks:", error);
+      }
     }
   };
 
@@ -49,10 +53,10 @@ function Dashboard() {
         <h1 className="dashboard-title">{username}'s Dashboard</h1>
       </div>
 
-      {/* Favorited Tracks Button */}
+      {/* Favorited Tracks Toggle Button */}
       <div className="filters">
-        <button onClick={fetchFavoritedTracks}>
-          Show Favorited Tracks
+        <button onClick={toggleFavorites}>
+          {showFavorites ? "Hide Favorited Tracks" : "Show Favorited Tracks"}
         </button>
       </div>
 
