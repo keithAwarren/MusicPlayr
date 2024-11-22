@@ -4,7 +4,6 @@ import apiClient from "../spotify";
 import SongCard from "../components/songCard";
 import Queue from "../components/queue";
 import AudioPlayer from "../components/audioPlayer";
-import Lyrics from "../components/lyrics";
 import Widgets from "../components/widgets/widgets";
 import "./player.css";
 
@@ -13,7 +12,6 @@ function Player() {
   const [tracks, setTracks] = useState([]); // State to hold the list of tracks
   const [currentTrack, setCurrentTrack] = useState(null); // State to hold the current track being played
   const [currentIndex, setCurrentIndex] = useState(0); // State to hold the index of the current track
-  const userId = localStorage.getItem("userId"); // Retrieve user ID from local storage
 
   // Effect to fetch playlist tracks when the component mounts or the location state changes
   useEffect(() => {
@@ -84,14 +82,12 @@ function Player() {
         ) : (
           <p>Track data is unavailable</p>
         )}
-        <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
-
-        {/* Render the Lyrics component */}
-        {currentTrack && currentTrack.name && currentTrack.artists ? (
-          <Lyrics trackName={currentTrack.name} artistName={currentTrack.artists[0].name} />
-        ) : (
-          <p>No lyrics available</p>
-        )}
+        {/* Queue/Lyrics Component */}
+        <Queue
+          tracks={tracks}
+          setCurrentIndex={setCurrentIndex}
+          currentTrack={currentTrack}
+        />
       </div>
     </div>
   );

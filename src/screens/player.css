@@ -266,7 +266,7 @@
   font-weight: 700;
   text-align: left;
   margin: 10px 0px;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .queue-list {
@@ -287,6 +287,18 @@
   margin: 0px;
   color: rgba(0, 0, 0, 0.6);
 }
+
+.up-next span {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.up-next span.active-tab {
+  color: rgba(0, 0, 0, 0.7);
+  border-bottom: 2px solid rgba(255, 118, 241, 0.386);
+}
+
 
 .track-name {
   width: 75%;
