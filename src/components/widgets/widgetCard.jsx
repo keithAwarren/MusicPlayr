@@ -8,22 +8,25 @@ function WidgetCard({ title, items, onItemClick }) {
       {items.map((item, index) => (
         <div key={index} onClick={() => onItemClick(item)}>
           <WidgetContext
-            // Set the title of the widget context to the item's name
-            title={item?.name}
-            // Set the subtitle based on the widget type
-            subtitle={
-              title === "Similar Artists"
-                ? item?.followers?.total + " followers"
-                : title === "Made For You"
-                ? item?.tracks?.total + " songs"
-                : item?.artists[0]?.name
+            // Set the title based on the widget type
+            title={
+              title === "Top Tracks"
+                ? item?.name // Track name for top tracks
+                : item?.name // General name for other items
             }
-            // Set the image URL for the widget context
+            // Set the subtitle dynamically
+            subtitle={
+              title === "Top Tracks"
+                ? item?.artists?.map((artist) => artist.name).join(", ") // Artist(s) for top tracks
+                : title === "Curated Playlists"
+                ? `${item?.tracks?.total || 0} songs` // Playlist song count
+                : item?.artists?.[0]?.name // General case
+            }
+            // Set the image URL dynamically
             image={
-              item?.images?.[0]?.url ||
-              item?.images?.[1]?.url ||
-              item?.images?.[2]?.url ||
-              ""
+              title === "Top Tracks"
+                ? item?.album?.images?.[0]?.url // Album cover for top tracks
+                : item?.images?.[0]?.url || "" // General image
             }
           />
         </div>
