@@ -52,7 +52,7 @@ function Dashboard() {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
       const response = await axios.get("http://localhost:8080/api/search", {
-        params: { q: searchTerm, type: "track,artist,album", limit: 10 },
+        params: { q: searchTerm, type: "track,artist,album", limit: 50 }, // Increased limit to 50
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setSearchResults(response.data.tracks?.items || []);
@@ -103,7 +103,7 @@ function Dashboard() {
       </div>
 
       {isSearching && (
-        <div className="search-results">
+        <div className="search-results scrollable-container">
           {searchResults.length > 0 ? (
             searchResults.map((result) => (
               <div key={result.id} className="search-result-item">

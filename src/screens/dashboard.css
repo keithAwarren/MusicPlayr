@@ -1,4 +1,4 @@
-.screen-container {
+.dashboard-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,17 +61,27 @@
 .search-results {
   width: 100%;
   max-width: 600px;
+  max-height: 500px;
   margin: 20px auto;
   padding: 10px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 10px;
+  overflow-y: auto;
 }
 
+/* Individual search result item */
 .search-result-item {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-result-item:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .search-result-item img {
