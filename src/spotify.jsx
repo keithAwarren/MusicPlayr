@@ -8,6 +8,7 @@ const scopes = [
   "playlist-read-private",
   "streaming",
   "app-remote-control",
+  "user-read-recently-played",
 ]; // App permissions
 
 // Construct the login URL with correct parameters

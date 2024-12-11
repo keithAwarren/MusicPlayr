@@ -13,6 +13,8 @@ function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [showRecentlyPlayed, setShowRecentlyPlayed] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,6 +46,49 @@ function Dashboard() {
     }
   };
 
+  const toggleRecentlyPlayed = async () => {
+    if (showRecentlyPlayed) {
+      setShowRecentlyPlayed(false);
+    } else {
+      try {
+        const accessToken = localStorage.getItem("spotify_access_token");
+        if (!accessToken) {
+          throw new Error("Access token is missing.");
+        }
+
+        const response = await axios.get(
+          "http://localhost:8080/api/analytics/recently-played",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+
+        const items = response.data || [];
+        if (items.length === 0) {
+          console.warn("No recently played tracks found.");
+          setRecentlyPlayed([]);
+          setShowRecentlyPlayed(true);
+          return;
+        }
+
+        const tracks = items.map((item) => ({
+          id: item.track?.id || item.played_at,
+          name: item.track?.name || "Unknown Song",
+          album: item.track?.album?.images?.[0]?.url || null,
+          artists: item.track?.artists
+            ?.map((artist) => artist.name)
+            .join(", ") || "Unknown Artist",
+          playedAt: new Date(item.played_at).toLocaleString(),
+        }));
+
+        setRecentlyPlayed(tracks);
+        setShowRecentlyPlayed(true);
+      } catch (error) {
+        console.error("Error fetching recently played tracks:", error);
+      }
+    }
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
@@ -52,7 +97,7 @@ function Dashboard() {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
       const response = await axios.get("http://localhost:8080/api/search", {
-        params: { q: searchTerm, type: "track,artist,album", limit: 50 }, // Increased limit to 50
+        params: { q: searchTerm, type: "track,artist,album", limit: 50 },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setSearchResults(response.data.tracks?.items || []);
@@ -133,6 +178,11 @@ function Dashboard() {
         <button onClick={toggleFavorites}>
           {showFavorites ? "Hide Favorited Tracks" : "Show Favorited Tracks"}
         </button>
+        <button onClick={toggleRecentlyPlayed}>
+          {showRecentlyPlayed
+            ? "Hide Recently Played Tracks"
+            : "Show Recently Played Tracks"}
+        </button>
       </div>
 
       {showFavorites && (
@@ -146,6 +196,29 @@ function Dashboard() {
             ))
           ) : (
             <p>No favorited tracks found.</p>
+          )}
+        </div>
+      )}
+
+      {showRecentlyPlayed && (
+        <div className="recently-played-list">
+          {recentlyPlayed.length > 0 ? (
+            recentlyPlayed.map((track) => (
+              <div key={track.id} className="recently-played-item">
+                <img
+                  src={track.album || "https://via.placeholder.com/150"}
+                  alt={track.name}
+                  className="recently-played-img"
+                />
+                <div>
+                  <p className="track-name">{track.name}</p>
+                  <p className="track-artists">{track.artists}</p>
+                  <p className="played-at">Played At: {track.playedAt}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No recently played tracks available.</p>
           )}
         </div>
       )}
