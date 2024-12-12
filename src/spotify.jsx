@@ -9,6 +9,7 @@ const scopes = [
   "streaming",
   "app-remote-control",
   "user-read-recently-played",
+  "user-top-read",
 ]; // App permissions
 
 // Construct the login URL with correct parameters

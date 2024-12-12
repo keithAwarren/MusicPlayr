@@ -15,6 +15,10 @@ function Dashboard() {
   const [isSearching, setIsSearching] = useState(false);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [showRecentlyPlayed, setShowRecentlyPlayed] = useState(false);
+  const [topTracks, setTopTracks] = useState([]);
+  const [showTopTracks, setShowTopTracks] = useState(false);
+  const [topArtists, setTopArtists] = useState([]);
+  const [showTopArtists, setShowTopArtists] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,39 +56,60 @@ function Dashboard() {
     } else {
       try {
         const accessToken = localStorage.getItem("spotify_access_token");
-        if (!accessToken) {
-          throw new Error("Access token is missing.");
-        }
-
         const response = await axios.get(
           "http://localhost:8080/api/analytics/recently-played",
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
-
-        const items = response.data || [];
-        if (items.length === 0) {
-          console.warn("No recently played tracks found.");
-          setRecentlyPlayed([]);
+        if (response.data.length > 0) {
+          setRecentlyPlayed(response.data);
           setShowRecentlyPlayed(true);
-          return;
+        } else {
+          console.log("No recently played tracks found.");
         }
-
-        const tracks = items.map((item) => ({
-          id: item.track?.id || item.played_at,
-          name: item.track?.name || "Unknown Song",
-          album: item.track?.album?.images?.[0]?.url || null,
-          artists: item.track?.artists
-            ?.map((artist) => artist.name)
-            .join(", ") || "Unknown Artist",
-          playedAt: new Date(item.played_at).toLocaleString(),
-        }));
-
-        setRecentlyPlayed(tracks);
-        setShowRecentlyPlayed(true);
       } catch (error) {
         console.error("Error fetching recently played tracks:", error);
+      }
+    }
+  };
+
+  const toggleTopTracks = async () => {
+    if (showTopTracks) {
+      setShowTopTracks(false);
+    } else {
+      try {
+        const accessToken = localStorage.getItem("spotify_access_token");
+        const response = await axios.get(
+          "http://localhost:8080/api/analytics/top-tracks",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        setTopTracks(response.data);
+        setShowTopTracks(true);
+      } catch (error) {
+        console.error("Error fetching top tracks:", error);
+      }
+    }
+  };
+
+  const toggleTopArtists = async () => {
+    if (showTopArtists) {
+      setShowTopArtists(false);
+    } else {
+      try {
+        const accessToken = localStorage.getItem("spotify_access_token");
+        const response = await axios.get(
+          "http://localhost:8080/api/analytics/top-artists",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        setTopArtists(response.data);
+        setShowTopArtists(true);
+      } catch (error) {
+        console.error("Error fetching top artists:", error);
       }
     }
   };
@@ -123,57 +148,6 @@ function Dashboard() {
         <h1 className="dashboard-title">{username}'s Dashboard</h1>
       </div>
 
-      <div className="search-bar">
-        <form onSubmit={handleSearch}>
-          <input
-            type="text"
-            placeholder="Search for tracks, artists, or albums..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          <button type="submit" className="search-button">
-            Search
-          </button>
-          {isSearching && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="clear-search-button"
-            >
-              Clear
-            </button>
-          )}
-        </form>
-      </div>
-
-      {isSearching && (
-        <div className="search-results scrollable-container">
-          {searchResults.length > 0 ? (
-            searchResults.map((result) => (
-              <div key={result.id} className="search-result-item">
-                <img
-                  src={
-                    result.album?.images[0]?.url ||
-                    "https://via.placeholder.com/150"
-                  }
-                  alt={result.name}
-                  className="search-result-img"
-                />
-                <div className="search-result-info">
-                  <p className="search-result-title">{result.name}</p>
-                  <p className="search-result-subtitle">
-                    {result.artists?.map((artist) => artist.name).join(", ")}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No results found for "{searchTerm}".</p>
-          )}
-        </div>
-      )}
-
       <div className="filters">
         <button onClick={toggleFavorites}>
           {showFavorites ? "Hide Favorited Tracks" : "Show Favorited Tracks"}
@@ -183,10 +157,17 @@ function Dashboard() {
             ? "Hide Recently Played Tracks"
             : "Show Recently Played Tracks"}
         </button>
+        <button onClick={toggleTopTracks}>
+          {showTopTracks ? "Hide Top Tracks" : "Show Top Tracks"}
+        </button>
+        <button onClick={toggleTopArtists}>
+          {showTopArtists ? "Hide Top Artists" : "Show Top Artists"}
+        </button>
       </div>
 
       {showFavorites && (
         <div className="favorites-list">
+          <h2>Favorited Tracks</h2>
           {favoritedTracks.length > 0 ? (
             favoritedTracks.map((track) => (
               <div key={track.item_id} className="favorite-item">
@@ -202,24 +183,58 @@ function Dashboard() {
 
       {showRecentlyPlayed && (
         <div className="recently-played-list">
-          {recentlyPlayed.length > 0 ? (
-            recentlyPlayed.map((track) => (
-              <div key={track.id} className="recently-played-item">
-                <img
-                  src={track.album || "https://via.placeholder.com/150"}
-                  alt={track.name}
-                  className="recently-played-img"
-                />
-                <div>
-                  <p className="track-name">{track.name}</p>
-                  <p className="track-artists">{track.artists}</p>
-                  <p className="played-at">Played At: {track.playedAt}</p>
-                </div>
+          <h2>Recently Played Tracks</h2>
+          {recentlyPlayed.map((item) => (
+            <div key={item.track.id} className="recently-played-item">
+              <img
+                src={item.track.album?.images[0]?.url || ""}
+                alt={item.track.name}
+                className="track-img"
+              />
+              <div>
+                <p>{item.track.name}</p>
+                <p>by {item.track.artists.map((artist) => artist.name).join(", ")}</p>
               </div>
-            ))
-          ) : (
-            <p>No recently played tracks available.</p>
-          )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showTopTracks && (
+        <div className="top-tracks-list">
+          <h2>Top Tracks</h2>
+          {topTracks.map((track) => (
+            <div key={track.id} className="top-track-item">
+              <img
+                src={track.album?.images[0]?.url || ""}
+                alt={track.name}
+                className="track-img"
+              />
+              <div>
+                <p>{track.name}</p>
+                <p>by {track.artists.map((artist) => artist.name).join(", ")}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showTopArtists && (
+        <div className="top-artists-list">
+          <h2>Top Artists</h2>
+          {topArtists.map((artist) => (
+            <div key={artist.id} className="top-artist-item">
+              <img
+                src={artist.images[0]?.url || ""}
+                alt={artist.name}
+                className="artist-img"
+              />
+              <div>
+                <p>{artist.name}</p>
+                <p>Genres: {artist.genres.join(", ")}</p>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
