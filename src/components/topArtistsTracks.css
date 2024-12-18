@@ -1,0 +1,96 @@
+.top-artists-tracks-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  
+  .top-artists-tracks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .top-artists-tracks-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .top-artists-tracks-close {
+    font-size: 16px;
+    color: #b91db9cc;
+    cursor: pointer;
+  }
+  
+  .top-artists-tracks-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .top-artists-tracks-tab {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .top-artists-tracks-tab:last-child {
+    margin-right: 0;
+  }
+  
+  .top-artists-tracks-tab:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .top-artists-tracks-tab.active {
+    background-color: #b91db9cc;
+    color: white;
+  }
+  
+  .top-artists-tracks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .top-artists-tracks-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .top-artists-tracks-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+  
+  .top-artists-tracks-item-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .top-artists-tracks-item-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .top-artists-tracks-item-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+  }  

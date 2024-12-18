@@ -25,88 +25,13 @@
   font-weight: bold;
 }
 
-/* Search bar styling */
-.search-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Filters for features */
+.filters {
   margin: 20px 0;
-}
-
-.search-bar input {
-  width: 300px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
-  outline: none;
-}
-
-.search-bar button {
-  padding: 10px 15px;
-  font-size: 16px;
-  background-color: #b91db9cc;
-  color: white;
-  border: none;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-  background-color: #be1ed766;
-}
-
-/* Search results */
-.search-results {
-  width: 100%;
-  max-width: 600px;
-  max-height: 500px;
-  margin: 20px auto;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow-y: auto;
-}
-
-/* Individual search result item */
-.search-result-item {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  gap: 20px;
 }
 
-.search-result-item:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-}
-
-.search-result-item img {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  margin-right: 15px;
-}
-
-.search-result-item div {
-  display: flex;
-  flex-direction: column;
-}
-
-.search-result-item p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.search-result-item p:first-child {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* Favorites button */
 .filters button {
   padding: 10px 20px;
   font-size: 16px;
@@ -120,36 +45,4 @@
 
 .filters button:hover {
   background-color: #45184080;
-}
-
-/* Favorites list */
-.favorites-list {
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-}
-
-.favorite-item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.favorite-item:last-child {
-  border-bottom: none;
-}
-
-.favorite-item h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.favorite-item p {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
 }
