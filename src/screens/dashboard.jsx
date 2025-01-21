@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./dashboard.css";
 import axios from "axios";
 import apiClient from "../spotify";
-import RecentlyPlayed from "../components/recentlyPlayed";
-import TopArtistsTracks from "../components/topArtistsTracks";
 
 function Dashboard() {
   const [username, setUsername] = useState("User");
@@ -11,10 +9,10 @@ function Dashboard() {
     "https://picsum.photos/id/237/200/300"
   );
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
-  const [showRecentlyPlayed, setShowRecentlyPlayed] = useState(false);
   const [topTracks, setTopTracks] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
-  const [showTopContent, setShowTopContent] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,36 +38,60 @@ function Dashboard() {
         }
       );
       setRecentlyPlayed(response.data);
-      setShowRecentlyPlayed(true);
     } catch (error) {
       console.error("Error fetching recently played tracks:", error);
     }
   };
 
-  const fetchTopTracksAndArtists = async () => {
+  const fetchTopTracks = async () => {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
-
-      const [tracksResponse, artistsResponse] = await Promise.all([
-        axios.get("http://localhost:8080/api/analytics/top-tracks", {
+      const response = await axios.get(
+        "http://localhost:8080/api/analytics/top-tracks",
+        {
           headers: { Authorization: `Bearer ${accessToken}` },
-        }),
-        axios.get("http://localhost:8080/api/analytics/top-artists", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }),
-      ]);
-
-      setTopTracks(tracksResponse.data);
-      setTopArtists(artistsResponse.data);
-      setShowTopContent(true);
+        }
+      );
+      setTopTracks(response.data);
     } catch (error) {
-      console.error("Error fetching top tracks and artists:", error);
+      console.error("Error fetching top tracks:", error);
+    }
+  };
+
+  const fetchTopArtists = async () => {
+    try {
+      const accessToken = localStorage.getItem("spotify_access_token");
+      const response = await axios.get(
+        "http://localhost:8080/api/analytics/top-artists",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setTopArtists(response.data);
+    } catch (error) {
+      console.error("Error fetching top artists:", error);
+    }
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+
+    try {
+      const accessToken = localStorage.getItem("spotify_access_token");
+      const response = await axios.get("http://localhost:8080/api/search", {
+        params: { q: searchTerm, type: "track,artist,album", limit: 50 },
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setSearchResults(response.data.tracks?.items || []);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
     }
   };
 
   return (
     <div className="screen-container">
-      {/* Profile Header */}
+      {/* Profile Section */}
       <div className="dashboard-header">
         <img
           src={profileImage}
@@ -79,32 +101,53 @@ function Dashboard() {
         <h1 className="dashboard-title">{username}'s Dashboard</h1>
       </div>
 
-      {/* Filters for Recently Played and Top Tracks & Artists */}
-      {!showRecentlyPlayed && !showTopContent && (
-        <div className="filters">
-          <button onClick={fetchRecentlyPlayed}>Show Recently Played</button>
-          <button onClick={fetchTopTracksAndArtists}>
-            Show Top Tracks & Artists
+      {/* Widgets */}
+      <div className="widgets-container">
+        <div className="widget-card">
+          <h4>Recently Played</h4>
+          <button onClick={fetchRecentlyPlayed} className="widget-button">
+            Refresh
           </button>
+          <ul>
+            {recentlyPlayed.map((track) => (
+              <li key={track.track.id}>
+                <img src={track.track.album.images[0].url} alt={track.track.name} />
+                <p>{track.track.name}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
 
-      {/* Recently Played Component */}
-      {showRecentlyPlayed && (
-        <RecentlyPlayed
-          tracks={recentlyPlayed}
-          onToggle={() => setShowRecentlyPlayed(false)}
-        />
-      )}
+        <div className="widget-card">
+          <h4>Top Tracks</h4>
+          <button onClick={fetchTopTracks} className="widget-button">
+            Refresh
+          </button>
+          <ul>
+            {topTracks.map((track) => (
+              <li key={track.id}>
+                <img src={track.album.images[0].url} alt={track.name} />
+                <p>{track.name}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {/* Top Artists & Tracks Component */}
-      {showTopContent && (
-        <TopArtistsTracks
-          tracks={topTracks}
-          artists={topArtists}
-          onToggle={() => setShowTopContent(false)}
-        />
-      )}
+        <div className="widget-card">
+          <h4>Top Artists</h4>
+          <button onClick={fetchTopArtists} className="widget-button">
+            Refresh
+          </button>
+          <ul>
+            {topArtists.map((artist) => (
+              <li key={artist.id}>
+                <img src={artist.images[0].url} alt={artist.name} />
+                <p>{artist.name}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
