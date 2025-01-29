@@ -47,6 +47,20 @@
   overflow: hidden;
 }
 
+.widget-button {
+  padding: 8px 12px;
+  background-color: #b91db9cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.widget-button:hover {
+  background-color: rgba(185, 29, 185, 0.254);
+}
+
 .widget-header {
   position: relative;
   background-color: rgba(0, 0, 0, 0);
@@ -71,12 +85,11 @@
 }
 
 .widget-card img {
-  width: 100px; 
+  width: 100px;
   height: 100px;
   border-radius: 5px;
   margin: 5px auto;
   object-fit: cover;
-  margin-left: 0;
 }
 
 .widget-card li {
@@ -85,24 +98,25 @@
   gap: 10px;
   padding: 5px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  justify-content: flex-start;
   width: 100%;
 }
 
-.widget-card li:last-child {
-  border-bottom: none;
+/* Track info */
+.track-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
 }
 
-.widget-button {
-  padding: 8px 12px;
-  background-color: #b91db9cc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 10px;
+.track-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
 }
 
-.widget-button:hover {
-  background-color: #be1ed766;
+.track-artist {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
 }

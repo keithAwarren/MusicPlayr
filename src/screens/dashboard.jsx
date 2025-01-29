@@ -105,7 +105,12 @@ function Dashboard() {
                       src={track.track.album.images[0].url}
                       alt={track.track.name}
                     />
-                    <p>{track.track.name}</p>
+                    <div className="track-info">
+                      <p className="track-title">{track.track.name}</p>
+                      <p className="track-artist">
+                        {track.track.artists.map((artist) => artist.name).join(", ")}
+                      </p>
+                    </div>
                   </li>
                 ))
               ) : (
@@ -129,7 +134,12 @@ function Dashboard() {
                 topTracks.map((track) => (
                   <li key={track.id}>
                     <img src={track.album.images[0].url} alt={track.name} />
-                    <p>{track.name}</p>
+                    <div className="track-info">
+                      <p className="track-title">{track.name}</p>
+                      <p className="track-artist">
+                        {track.artists.map((artist) => artist.name).join(", ")}
+                      </p>
+                    </div>
                   </li>
                 ))
               ) : (
