@@ -13,21 +13,21 @@ function Dashboard() {
   const [topArtists, setTopArtists] = useState([]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await apiClient.get("me");
+        setUsername(response.data.display_name || "User");
+        setProfileImage(response.data.images?.[0]?.url || profileImage);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
     fetchUserData();
     fetchRecentlyPlayed();
     fetchTopTracks();
     fetchTopArtists();
   }, []);
-
-  const fetchUserData = async () => {
-    try {
-      const response = await apiClient.get("me");
-      setUsername(response.data.display_name || "User");
-      setProfileImage(response.data.images?.[0]?.url || profileImage);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
 
   const fetchRecentlyPlayed = async () => {
     try {
@@ -88,64 +88,79 @@ function Dashboard() {
 
       {/* Widgets */}
       <div className="widgets-container">
+        {/* Recently Played */}
         <div className="widget-card">
-          <h4>Recently Played</h4>
-          <button onClick={fetchRecentlyPlayed} className="widget-button">
-            Refresh
-          </button>
-          <ul>
-            {recentlyPlayed.length > 0 ? (
-              recentlyPlayed.map((track) => (
-                <li key={track.track.id}>
-                  <img
-                    src={track.track.album.images[0].url}
-                    alt={track.track.name}
-                  />
-                  <p>{track.track.name}</p>
-                </li>
-              ))
-            ) : (
-              <p>No recent tracks available.</p>
-            )}
-          </ul>
+          <div className="widget-header">
+            <h4>Recently Played</h4>
+            <button onClick={fetchRecentlyPlayed} className="widget-button">
+              Refresh
+            </button>
+          </div>
+          <div className="widget-content">
+            <ul>
+              {recentlyPlayed.length > 0 ? (
+                recentlyPlayed.map((track) => (
+                  <li key={track.track.id}>
+                    <img
+                      src={track.track.album.images[0].url}
+                      alt={track.track.name}
+                    />
+                    <p>{track.track.name}</p>
+                  </li>
+                ))
+              ) : (
+                <p>No recent tracks available.</p>
+              )}
+            </ul>
+          </div>
         </div>
 
+        {/* Top Tracks */}
         <div className="widget-card">
-          <h4>Top Tracks</h4>
-          <button onClick={fetchTopTracks} className="widget-button">
-            Refresh
-          </button>
-          <ul>
-            {topTracks.length > 0 ? (
-              topTracks.map((track) => (
-                <li key={track.id}>
-                  <img src={track.album.images[0].url} alt={track.name} />
-                  <p>{track.name}</p>
-                </li>
-              ))
-            ) : (
-              <p>No top tracks available.</p>
-            )}
-          </ul>
+          <div className="widget-header">
+            <h4>Top Tracks</h4>
+            <button onClick={fetchTopTracks} className="widget-button">
+              Refresh
+            </button>
+          </div>
+          <div className="widget-content">
+            <ul>
+              {topTracks.length > 0 ? (
+                topTracks.map((track) => (
+                  <li key={track.id}>
+                    <img src={track.album.images[0].url} alt={track.name} />
+                    <p>{track.name}</p>
+                  </li>
+                ))
+              ) : (
+                <p>No top tracks available.</p>
+              )}
+            </ul>
+          </div>
         </div>
 
+        {/* Top Artists */}
         <div className="widget-card">
-          <h4>Top Artists</h4>
-          <button onClick={fetchTopArtists} className="widget-button">
-            Refresh
-          </button>
-          <ul>
-            {topArtists.length > 0 ? (
-              topArtists.map((artist) => (
-                <li key={artist.id}>
-                  <img src={artist.images[0].url} alt={artist.name} />
-                  <p>{artist.name}</p>
-                </li>
-              ))
-            ) : (
-              <p>No top artists available.</p>
-            )}
-          </ul>
+          <div className="widget-header">
+            <h4>Top Artists</h4>
+            <button onClick={fetchTopArtists} className="widget-button">
+              Refresh
+            </button>
+          </div>
+          <div className="widget-content">
+            <ul>
+              {topArtists.length > 0 ? (
+                topArtists.map((artist) => (
+                  <li key={artist.id}>
+                    <img src={artist.images[0].url} alt={artist.name} />
+                    <p>{artist.name}</p>
+                  </li>
+                ))
+              ) : (
+                <p>No top artists available.</p>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

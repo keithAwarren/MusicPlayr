@@ -1,3 +1,11 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
 /* Profile Section */
 .dashboard-header {
   text-align: center;
@@ -16,34 +24,6 @@
   font-weight: bold;
 }
 
-/* Search Bar */
-.search-bar {
-  margin-bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.search-bar input {
-  width: 300px;
-  padding: 10px;
-  border-radius: 5px 0 0 5px;
-  border: 1px solid #ccc;
-}
-
-.search-bar button {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 0 5px 5px 0;
-  background-color: #b91db9cc;
-  color: white;
-  cursor: pointer;
-}
-
-.search-bar button:hover {
-  background-color: #be1ed766;
-}
-
 /* Widgets */
 .widgets-container {
   display: flex;
@@ -56,35 +36,71 @@
 
 .widget-card {
   width: 300px;
+  height: 450px;
   padding: 15px;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  height: 450px;
-  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.widget-card img {
-  width: 100px;
-  height: 100px;
-  border-radius: 5px;
-  margin: 5px auto;
+.widget-header {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollable list */
+.widget-content {
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.widget-content::-webkit-scrollbar {
+  display: none;
 }
 
 .widget-card ul {
   list-style: none;
-  margin-right: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+.widget-card img {
+  width: 100px; 
+  height: 100px;
+  border-radius: 5px;
+  margin: 5px auto;
+  object-fit: cover;
+  margin-left: 0;
+}
+
+.widget-card li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.widget-card li:last-child {
+  border-bottom: none;
 }
 
 .widget-button {
-  margin-bottom: 10px;
-  padding: 10px 15px;
+  padding: 8px 12px;
   background-color: #b91db9cc;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .widget-button:hover {
