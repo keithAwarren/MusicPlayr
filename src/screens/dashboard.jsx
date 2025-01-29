@@ -11,22 +11,23 @@ function Dashboard() {
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await apiClient.get("me");
-        setUsername(response.data.display_name || "User");
-        setProfileImage(response.data.images?.[0]?.url || profileImage);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     fetchUserData();
+    fetchRecentlyPlayed();
+    fetchTopTracks();
+    fetchTopArtists();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await apiClient.get("me");
+      setUsername(response.data.display_name || "User");
+      setProfileImage(response.data.images?.[0]?.url || profileImage);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   const fetchRecentlyPlayed = async () => {
     try {
@@ -73,22 +74,6 @@ function Dashboard() {
     }
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) return;
-
-    try {
-      const accessToken = localStorage.getItem("spotify_access_token");
-      const response = await axios.get("http://localhost:8080/api/search", {
-        params: { q: searchTerm, type: "track,artist,album", limit: 50 },
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      setSearchResults(response.data.tracks?.items || []);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
-  };
-
   return (
     <div className="screen-container">
       {/* Profile Section */}
@@ -109,12 +94,19 @@ function Dashboard() {
             Refresh
           </button>
           <ul>
-            {recentlyPlayed.map((track) => (
-              <li key={track.track.id}>
-                <img src={track.track.album.images[0].url} alt={track.track.name} />
-                <p>{track.track.name}</p>
-              </li>
-            ))}
+            {recentlyPlayed.length > 0 ? (
+              recentlyPlayed.map((track) => (
+                <li key={track.track.id}>
+                  <img
+                    src={track.track.album.images[0].url}
+                    alt={track.track.name}
+                  />
+                  <p>{track.track.name}</p>
+                </li>
+              ))
+            ) : (
+              <p>No recent tracks available.</p>
+            )}
           </ul>
         </div>
 
@@ -124,12 +116,16 @@ function Dashboard() {
             Refresh
           </button>
           <ul>
-            {topTracks.map((track) => (
-              <li key={track.id}>
-                <img src={track.album.images[0].url} alt={track.name} />
-                <p>{track.name}</p>
-              </li>
-            ))}
+            {topTracks.length > 0 ? (
+              topTracks.map((track) => (
+                <li key={track.id}>
+                  <img src={track.album.images[0].url} alt={track.name} />
+                  <p>{track.name}</p>
+                </li>
+              ))
+            ) : (
+              <p>No top tracks available.</p>
+            )}
           </ul>
         </div>
 
@@ -139,12 +135,16 @@ function Dashboard() {
             Refresh
           </button>
           <ul>
-            {topArtists.map((artist) => (
-              <li key={artist.id}>
-                <img src={artist.images[0].url} alt={artist.name} />
-                <p>{artist.name}</p>
-              </li>
-            ))}
+            {topArtists.length > 0 ? (
+              topArtists.map((artist) => (
+                <li key={artist.id}>
+                  <img src={artist.images[0].url} alt={artist.name} />
+                  <p>{artist.name}</p>
+                </li>
+              ))
+            ) : (
+              <p>No top artists available.</p>
+            )}
           </ul>
         </div>
       </div>
