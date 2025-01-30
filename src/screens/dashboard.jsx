@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import axios from "axios";
 import apiClient from "../spotify";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("User");
   const [profileImage, setProfileImage] = useState(
     "https://picsum.photos/id/237/200/300"
@@ -74,6 +76,10 @@ function Dashboard() {
     }
   };
 
+  const playTrack = (trackUri) => {
+    navigate("/MusicPlayr/player", { state: { uri: trackUri } });
+  };
+
   return (
     <div className="screen-container">
       {/* Profile Section */}
@@ -100,17 +106,17 @@ function Dashboard() {
             <ul>
               {recentlyPlayed.length > 0 ? (
                 recentlyPlayed.map((track) => (
-                  <li key={track.track.id}>
+                  <li key={track.track.id} onClick={() => playTrack(track.track.uri)}>
                     <img
                       src={track.track.album.images[0].url}
                       alt={track.track.name}
                     />
-                    <div className="track-info">
+                    <span className="track-info">
                       <p className="track-title">{track.track.name}</p>
                       <p className="track-artist">
-                        {track.track.artists.map((artist) => artist.name).join(", ")}
+                        {track.track.artists.map(artist => artist.name).join(", ")}
                       </p>
-                    </div>
+                    </span>
                   </li>
                 ))
               ) : (
@@ -132,14 +138,14 @@ function Dashboard() {
             <ul>
               {topTracks.length > 0 ? (
                 topTracks.map((track) => (
-                  <li key={track.id}>
+                  <li key={track.id} onClick={() => playTrack(track.uri)}>
                     <img src={track.album.images[0].url} alt={track.name} />
-                    <div className="track-info">
+                    <span className="track-info">
                       <p className="track-title">{track.name}</p>
                       <p className="track-artist">
-                        {track.artists.map((artist) => artist.name).join(", ")}
+                        {track.artists.map(artist => artist.name).join(", ")}
                       </p>
-                    </div>
+                    </span>
                   </li>
                 ))
               ) : (

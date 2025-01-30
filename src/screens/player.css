@@ -240,6 +240,16 @@
   margin-top: 10px;
 }
 
+.favorite-button {
+  padding: 8px 12px;
+  background-color: #b91db9cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
 /* queue/up next */
 .queue-container {
   width: 100%;
