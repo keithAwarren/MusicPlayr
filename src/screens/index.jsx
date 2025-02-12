@@ -76,7 +76,7 @@ function Index() {
 
       try {
         const response = await axios.post(
-          "http://localhost:8080/auth/refresh",
+          "https://playrbackend.onrender.com/auth/refresh",
           { refresh_token: refreshToken },
           {
             headers: {

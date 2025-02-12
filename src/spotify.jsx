@@ -2,7 +2,7 @@ import axios from "axios";
 
 const authEndpoint = "https://accounts.spotify.com/en/authorize"; // Base URL for Spotify authorization
 const clientId = "74745c6eaa6c44c9a6fe6ef0e6fa6310"; // Playr App client ID
-const redirectUri = "http://localhost:3000/MusicPlayr/callback"; // Redirect URL after login
+const redirectUri = "https://playrbackend.onrender.com/MusicPlayr/callback"; // Redirect URL after login
 const scopes = [
   "user-library-read",
   "playlist-read-private",

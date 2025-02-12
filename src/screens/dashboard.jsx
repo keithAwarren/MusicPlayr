@@ -35,7 +35,7 @@ function Dashboard() {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
       const response = await axios.get(
-        "http://localhost:8080/api/analytics/recently-played",
+        "https://playrbackend.onrender.com/api/analytics/recently-played",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -50,7 +50,7 @@ function Dashboard() {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
       const response = await axios.get(
-        "http://localhost:8080/api/analytics/top-tracks",
+        "https://playrbackend.onrender.com/api/analytics/top-tracks",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -65,7 +65,7 @@ function Dashboard() {
     try {
       const accessToken = localStorage.getItem("spotify_access_token");
       const response = await axios.get(
-        "http://localhost:8080/api/analytics/top-artists",
+        "https://playrbackend.onrender.com/api/analytics/top-artists",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }

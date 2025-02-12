@@ -13,7 +13,7 @@ function Queue({ tracks, setCurrentIndex, currentTrack }) {
       const fetchLyrics = async () => {
         try {
           setLoading(true);
-          const response = await axios.get("http://localhost:8080/api/lyrics", {
+          const response = await axios.get("https://playrbackend.onrender.com/api/lyrics", {
             params: {
               trackName: currentTrack.name,
               artistName: currentTrack.artists[0]?.name,

@@ -16,7 +16,7 @@ function SongCard({ track }) {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/api/favorites/track/${track.id}`
+                    `https://playrbackend.onrender.com/api/favorites/track/${track.id}`
                 );
                 setIsFavorited(response.data.isFavorite);
             } catch (error) {
@@ -33,7 +33,7 @@ function SongCard({ track }) {
         if (!track || !track.id) return; // Ensure track and track.id exist
 
         try {
-            await axios.post("http://localhost:8080/api/favorites", {
+            await axios.post("https://playrbackend.onrender.com/api/favorites", {
                 itemType: "track",
                 itemId: track.id,
                 itemName: track.name,
