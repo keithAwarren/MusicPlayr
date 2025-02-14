@@ -17,7 +17,7 @@ export const loginEndpoint = `${authEndpoint}?client_id=${clientId}&redirect_uri
   redirectUri
 )}&scope=${encodeURIComponent(
   scopes.join(" ")
-)}&response_type=token&show_dialog=true`;
+)}&response_type=code&show_dialog=true`;
 
 // Use Axios for making requests to the Spotify API
 const apiClient = axios.create({
