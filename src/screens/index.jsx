@@ -47,7 +47,7 @@ function Index() {
       }
 
       // Clear the hash from the URL after extracting tokens
-      window.history.replaceState(null, null, "/dashboard");
+      window.history.replaceState(null, null, "/");
     } else {
       // Use stored values if no tokens are in the URL
       const storedToken = localStorage.getItem("spotify_access_token");
@@ -127,11 +127,11 @@ function Index() {
       <div className="main-body">
         <Sidebar />
         <Routes>
-          <Route path="/MusicPlayr/" element={<Navigate to="/MusicPlayr/login" />} />
-          <Route path="/MusicPlayr/playlists" element={<Playlists />} />
-          <Route path="/MusicPlayr/player" element={<Player />} />
-          <Route path="/MusicPlayr/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/MusicPlayr/login" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/player" element={<Player />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
