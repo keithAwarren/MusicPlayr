@@ -47,7 +47,7 @@ function Index() {
       }
 
       // Clear the hash from the URL after extracting tokens
-      window.history.replaceState(null, null, "/MusicPlayr/dashboard");
+      window.history.replaceState(null, null, "/dashboard");
     } else {
       // Use stored values if no tokens are in the URL
       const storedToken = localStorage.getItem("spotify_access_token");
