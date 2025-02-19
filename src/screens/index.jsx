@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -18,11 +18,11 @@ function Index() {
   const [refreshToken, setRefreshToken] = useState("");
 
   useEffect(() => {
-    const queryString = window.location.search;
-    console.log("Raw URL query string:", queryString);
+    const hash = window.location.hash;
+    console.log("Raw URL hash:", hash);
 
-    if (queryString) {
-      const query = new URLSearchParams(queryString);
+    if (hash) {
+      const query = new URLSearchParams(hash.substring(1));
       const accessToken = query.get("access_token");
       const refreshTokenFromUrl = query.get("refresh_token");
       const jwtToken = query.get("jwt");
@@ -45,8 +45,8 @@ function Index() {
         setRefreshToken(refreshTokenFromUrl);
       }
 
-      // Remove query parameters after extraction
-      window.history.replaceState(null, null, "./dashboard");
+      // Remove hash from URL after extracting tokens
+      window.history.replaceState(null, null, "/MusicPlayr/#/dashboard");
     } else {
       // Retrieve stored values
       const storedToken = localStorage.getItem("spotify_access_token");
@@ -57,7 +57,7 @@ function Index() {
         setClientToken(storedToken);
       } else {
         console.error("Stored tokens missing or invalid, redirecting to login");
-        window.location.href = "/MusicPlayr/login";
+        window.location.href = "/MusicPlayr/#/login";
       }
     }
   }, []);
@@ -96,7 +96,7 @@ function Index() {
           localStorage.removeItem("jwt_token");
           setToken("");
           setRefreshToken("");
-          window.location.href = "/MusicPlayr/login";
+          window.location.href = "/MusicPlayr/#/login";
         }
       }
     };
