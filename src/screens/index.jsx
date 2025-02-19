@@ -18,23 +18,26 @@ function Index() {
   const [refreshToken, setRefreshToken] = useState("");
 
   useEffect(() => {
-    const hash = window.location.hash;
-    console.log("Raw URL hash:", hash);
+    const queryString = window.location.search;
+    console.log("Raw URL query string:", queryString);
 
-    if (hash) {
-      const query = new URLSearchParams(hash.substring(1));
+    if (queryString) {
+      const query = new URLSearchParams(queryString);
       const accessToken = query.get("access_token");
       const refreshTokenFromUrl = query.get("refresh_token");
-      const jwtToken = query.get("jwt");  // Extract JWT token from the URL
+      const jwtToken = query.get("jwt");
 
       console.log("Parsed accessToken:", accessToken);
       console.log("Parsed refreshToken:", refreshTokenFromUrl);
-      console.log("Parsed JWT:", jwtToken);  // Log the JWT for debugging
+      console.log("Parsed JWT:", jwtToken);
 
-      if (accessToken) {
+      if (accessToken && jwtToken) {
         localStorage.setItem("spotify_access_token", accessToken);
+        localStorage.setItem("jwt_token", jwtToken);
         setToken(accessToken);
         setClientToken(accessToken);
+      } else {
+        console.error("Missing tokens, not redirecting");
       }
 
       if (refreshTokenFromUrl) {
@@ -42,29 +45,19 @@ function Index() {
         setRefreshToken(refreshTokenFromUrl);
       }
 
-      if (jwtToken) {
-        localStorage.setItem("jwt_token", jwtToken);  // Store JWT in localStorage
-      }
-
-      // Clear the hash from the URL after extracting tokens
+      // Remove query parameters after extraction
       window.history.replaceState(null, null, "./dashboard");
     } else {
-      // Use stored values if no tokens are in the URL
+      // Retrieve stored values
       const storedToken = localStorage.getItem("spotify_access_token");
-      const storedRefreshToken = localStorage.getItem("spotify_refresh_token");
-      const storedJwtToken = localStorage.getItem("jwt_token");  // Retrieve stored JWT
+      const storedJwtToken = localStorage.getItem("jwt_token");
 
-      if (storedToken) {
+      if (storedToken && storedJwtToken) {
         setToken(storedToken);
         setClientToken(storedToken);
-      }
-
-      if (storedRefreshToken) {
-        setRefreshToken(storedRefreshToken);
-      }
-
-      if (storedJwtToken) {
-        console.log("Retrieved JWT:", storedJwtToken);  // Debug log for JWT retrieval
+      } else {
+        console.error("Stored tokens missing or invalid, redirecting to login");
+        window.location.href = "/MusicPlayr/login";
       }
     }
   }, []);
@@ -72,7 +65,7 @@ function Index() {
   // Automatically refresh the access token when it expires
   useEffect(() => {
     const refreshAccessToken = async () => {
-      const jwtToken = localStorage.getItem("jwt_token");  // Retrieve JWT token for authorization
+      const jwtToken = localStorage.getItem("jwt_token");
 
       try {
         const response = await axios.post(
@@ -80,7 +73,7 @@ function Index() {
           { refresh_token: refreshToken },
           {
             headers: {
-              Authorization: `Bearer ${jwtToken}`,  // Include JWT in request headers
+              Authorization: `Bearer ${jwtToken}`,
             },
           }
         );
@@ -121,7 +114,7 @@ function Index() {
   console.log("Rendering with token:", token);
 
   return !token ? (
-    <Login /> // Show the login screen if no token is found
+    <Login />
   ) : (
     <Router>
       <div className="main-body">
