@@ -16,14 +16,14 @@ import axios from "axios";
 function Index() {
   const [token, setToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
-  const [isLoading, setIsLoading] = useState(true); // Prevents premature redirects
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const hash = window.location.hash;
+    const hash = window.location.hash.substring(1); // Remove leading #
     console.log("Raw URL hash:", hash);
 
     if (hash.includes("access_token")) {
-      const query = new URLSearchParams(hash.substring(1));
+      const query = new URLSearchParams(hash);
       const accessToken = query.get("access_token");
       const refreshTokenFromUrl = query.get("refresh_token");
       const jwtToken = query.get("jwt");
@@ -38,7 +38,9 @@ function Index() {
         setToken(accessToken);
         setClientToken(accessToken);
       } else {
-        console.error("Missing tokens, not redirecting");
+        console.error("Missing tokens, staying on login page.");
+        setIsLoading(false);
+        return;
       }
 
       if (refreshTokenFromUrl) {
@@ -46,10 +48,10 @@ function Index() {
         setRefreshToken(refreshTokenFromUrl);
       }
 
-      // Replace URL to avoid stacking history
+      // Redirect to dashboard *only after* storing tokens
       window.location.replace("https://playrofficial.netlify.app/#/dashboard");
     } else {
-      // Retrieve stored values
+      // ✅ Retrieve stored tokens correctly
       const storedToken = localStorage.getItem("spotify_access_token");
       const storedJwtToken = localStorage.getItem("jwt_token");
 
@@ -57,16 +59,16 @@ function Index() {
         setToken(storedToken);
         setClientToken(storedToken);
       } else {
-        console.error("Stored tokens missing or invalid, redirecting to login");
+        console.error("Stored tokens missing, redirecting to login");
         window.location.replace("https://playrofficial.netlify.app/#/login");
       }
     }
-    setIsLoading(false); // Ensure it stops checking
+    setIsLoading(false);
   }, []);
 
-  // Automatically refresh the access token when it expires
+  // Automatically refresh access token when it expires
   useEffect(() => {
-    if (!refreshToken || isLoading) return; // Prevent running this logic while loading
+    if (!refreshToken || isLoading) return;
 
     const refreshAccessToken = async () => {
       const jwtToken = localStorage.getItem("jwt_token");
@@ -110,7 +112,7 @@ function Index() {
       refreshAccessToken();
     }, 3500 * 1000); // Refresh every 3500 seconds (slightly before token expiration)
 
-    return () => clearInterval(interval); // Clean up interval on component unmount
+    return () => clearInterval(interval); // Cleanup on unmount
   }, [refreshToken, isLoading]);
 
   console.log("Rendering with token:", token);
@@ -126,7 +128,8 @@ function Index() {
       <div className="main-body">
         <Sidebar />
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/player" element={<Player />} />
           <Route path="/dashboard" element={<Dashboard />} />
