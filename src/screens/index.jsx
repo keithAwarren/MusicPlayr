@@ -16,12 +16,13 @@ import axios from "axios";
 function Index() {
   const [token, setToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // Prevents premature redirects
 
   useEffect(() => {
     const hash = window.location.hash;
     console.log("Raw URL hash:", hash);
 
-    if (hash) {
+    if (hash.includes("access_token")) {
       const query = new URLSearchParams(hash.substring(1));
       const accessToken = query.get("access_token");
       const refreshTokenFromUrl = query.get("refresh_token");
@@ -45,8 +46,8 @@ function Index() {
         setRefreshToken(refreshTokenFromUrl);
       }
 
-      // Remove hash from URL after extracting tokens
-      window.history.replaceState(null, null, "/MusicPlayr/#/dashboard");
+      // Replace URL to avoid stacking history
+      window.location.replace("https://playrofficial.netlify.app/#/dashboard");
     } else {
       // Retrieve stored values
       const storedToken = localStorage.getItem("spotify_access_token");
@@ -57,13 +58,16 @@ function Index() {
         setClientToken(storedToken);
       } else {
         console.error("Stored tokens missing or invalid, redirecting to login");
-        window.location.href = "/MusicPlayr/#/login";
+        window.location.replace("https://playrofficial.netlify.app/#/login");
       }
     }
+    setIsLoading(false); // Ensure it stops checking
   }, []);
 
   // Automatically refresh the access token when it expires
   useEffect(() => {
+    if (!refreshToken || isLoading) return; // Prevent running this logic while loading
+
     const refreshAccessToken = async () => {
       const jwtToken = localStorage.getItem("jwt_token");
 
@@ -96,22 +100,24 @@ function Index() {
           localStorage.removeItem("jwt_token");
           setToken("");
           setRefreshToken("");
-          window.location.href = "/MusicPlayr/#/login";
+          window.location.replace("https://playrofficial.netlify.app/#/login");
         }
       }
     };
 
-    if (refreshToken) {
-      const interval = setInterval(() => {
-        console.log("Refreshing access token...");
-        refreshAccessToken();
-      }, 3500 * 1000); // Refresh every 3500 seconds (slightly before token expiration)
+    const interval = setInterval(() => {
+      console.log("Refreshing access token...");
+      refreshAccessToken();
+    }, 3500 * 1000); // Refresh every 3500 seconds (slightly before token expiration)
 
-      return () => clearInterval(interval); // Clean up interval on component unmount
-    }
-  }, [refreshToken]);
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, [refreshToken, isLoading]);
 
   console.log("Rendering with token:", token);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Prevents UI flickering while processing tokens
+  }
 
   return !token ? (
     <Login />
