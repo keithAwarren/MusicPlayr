@@ -22,6 +22,10 @@ function Index() {
     const hash = window.location.hash.substring(1); // Remove leading #
     console.log("Raw URL hash:", hash);
 
+    if (hash.startsWith("/")) {
+      window.location.hash = hash.substring(1); // Fixes incorrect `/login` hash issue
+    }
+
     if (hash.includes("access_token")) {
       const query = new URLSearchParams(hash);
       const accessToken = query.get("access_token");

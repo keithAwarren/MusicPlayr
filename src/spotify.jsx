@@ -2,7 +2,7 @@ import axios from "axios";
 
 const authEndpoint = "https://accounts.spotify.com/authorize"; // Base URL for Spotify authorization
 const clientId = "74745c6eaa6c44c9a6fe6ef0e6fa6310"; // Playr App client ID
-const redirectUri = "https://playrofficial.netlify.app/callback"; 
+const redirectUri = "https://playrofficial.netlify.app/#/dashboard"; 
 
 const scopes = [
   "user-library-read",
