@@ -19,57 +19,47 @@ function Index() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let hash = window.location.hash.substring(1); // Remove leading #
+    let hash = window.location.hash;
     console.log("Raw URL hash:", hash);
 
-    if (hash.startsWith("/")) {
-      hash = hash.substring(1); // Fixes incorrect `/login` hash issue
+    if (hash.startsWith("#")) {
+      hash = hash.substring(1); // Remove #
     }
 
-    if (hash.includes("access_token")) {
-      const query = new URLSearchParams(hash);
-      const accessToken = query.get("access_token");
-      const refreshTokenFromUrl = query.get("refresh_token");
-      const jwtToken = query.get("jwt");
+    const query = new URLSearchParams(hash);
+    const accessToken = query.get("access_token");
+    const refreshTokenFromUrl = query.get("refresh_token");
+    const jwtToken = query.get("jwt");
 
-      console.log("Parsed accessToken:", accessToken);
-      console.log("Parsed refreshToken:", refreshTokenFromUrl);
-      console.log("Parsed JWT:", jwtToken);
+    console.log("Parsed accessToken:", accessToken);
+    console.log("Parsed refreshToken:", refreshTokenFromUrl);
+    console.log("Parsed JWT:", jwtToken);
 
-      if (accessToken && jwtToken) {
+    // Ensure tokens are stored before redirecting
+    if (accessToken && jwtToken) {
+      try {
         localStorage.setItem("spotify_access_token", accessToken);
         localStorage.setItem("jwt_token", jwtToken);
         setToken(accessToken);
         setClientToken(accessToken);
-      } else {
-        console.error("Missing tokens, staying on login page.");
-        setIsLoading(false);
-        return;
-      }
 
-      if (refreshTokenFromUrl) {
-        localStorage.setItem("spotify_refresh_token", refreshTokenFromUrl);
-        setRefreshToken(refreshTokenFromUrl);
-      }
+        if (refreshTokenFromUrl) {
+          localStorage.setItem("spotify_refresh_token", refreshTokenFromUrl);
+          setRefreshToken(refreshTokenFromUrl);
+        }
 
-      // Ensure tokens are stored before redirecting
-      setTimeout(() => {
-        window.location.replace("https://playrofficial.netlify.app/#/dashboard");
-      }, 100);
+        // Wait before redirecting to avoid race conditions
+        setTimeout(() => {
+          window.location.replace("https://playrofficial.netlify.app/#/dashboard");
+        }, 100);
+      } catch (error) {
+        console.error("Error accessing localStorage:", error);
+      }
     } else {
-      // Retrieve stored tokens correctly
-      const storedToken = localStorage.getItem("spotify_access_token");
-      const storedJwtToken = localStorage.getItem("jwt_token");
-
-      if (storedToken && storedJwtToken) {
-        setToken(storedToken);
-        setClientToken(storedToken);
-      } else {
-        console.error("Stored tokens missing, redirecting to login");
-        window.location.replace("https://playrofficial.netlify.app/#/login");
-      }
+      console.error("Missing tokens, staying on login page.");
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
   }, []);
 
   // Automatically refresh access token when it expires
@@ -78,6 +68,11 @@ function Index() {
 
     const refreshAccessToken = async () => {
       const jwtToken = localStorage.getItem("jwt_token");
+
+      if (!jwtToken) {
+        console.error("Missing JWT token, cannot refresh access token.");
+        return;
+      }
 
       try {
         const response = await axios.post(
