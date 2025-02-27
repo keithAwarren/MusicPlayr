@@ -19,11 +19,11 @@ function Index() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const hash = window.location.hash.substring(1); // Remove leading #
+    let hash = window.location.hash.substring(1); // Remove leading #
     console.log("Raw URL hash:", hash);
 
     if (hash.startsWith("/")) {
-      window.location.hash = hash.substring(1); // Fixes incorrect `/login` hash issue
+      hash = hash.substring(1); // Fixes incorrect `/login` hash issue
     }
 
     if (hash.includes("access_token")) {
@@ -52,10 +52,12 @@ function Index() {
         setRefreshToken(refreshTokenFromUrl);
       }
 
-      // Redirect to dashboard *only after* storing tokens
-      window.location.replace("https://playrofficial.netlify.app/#/dashboard");
+      // Ensure tokens are stored before redirecting
+      setTimeout(() => {
+        window.location.replace("https://playrofficial.netlify.app/#/dashboard");
+      }, 100);
     } else {
-      // ✅ Retrieve stored tokens correctly
+      // Retrieve stored tokens correctly
       const storedToken = localStorage.getItem("spotify_access_token");
       const storedJwtToken = localStorage.getItem("jwt_token");
 
