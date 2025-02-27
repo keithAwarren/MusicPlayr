@@ -18,6 +18,19 @@ function Index() {
   const [refreshToken, setRefreshToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Handle "code" received from Spotify first
+  useEffect(() => {
+    let urlParams = new URLSearchParams(window.location.search);
+    let code = urlParams.get("code");
+
+    if (code) {
+      console.log("Received code from Spotify:", code);
+      window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
+      return; // Stop further execution since we are redirecting
+    }
+  }, []);
+
+  // ✅ 2️⃣ Extract and store tokens
   useEffect(() => {
     let hash = window.location.hash;
     console.log("Raw URL hash:", hash);
