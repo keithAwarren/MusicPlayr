@@ -135,6 +135,12 @@ function Index() {
     return <div>Loading...</div>; // Prevents UI flickering while processing tokens
   }
 
+console.log("Is Dashboard imported?", typeof Dashboard);
+console.log("Is Sidebar imported?", typeof Sidebar);
+console.log("Is Playlists imported?", typeof Playlists);
+console.log("Is Player imported?", typeof Player);
+console.log("Is Login imported?", typeof Login);
+
   return !token ? (
     <Login />
   ) : (

@@ -6,24 +6,8 @@ import apiClient from "../spotify";
 
 console.log("Is the dashboard component rendering")
 
-const DEBUG_MODE = true;
-
 function Dashboard() {
-  if (DEBUG_MODE) {
-    return (
-      <div style={{ 
-        color: "white", 
-        fontSize: "24px", 
-        textAlign: "center", 
-        padding: "20px",
-        backgroundColor: "black",
-        minHeight: "100vh"
-      }}>
-        ✅ Dashboard Loaded Successfully!
-      </div>
-    );
-  }
-  
+
   const navigate = useNavigate();
   const [username, setUsername] = useState("User");
   const [profileImage, setProfileImage] = useState(
