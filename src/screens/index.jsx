@@ -4,6 +4,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import Sidebar from "../components/sidebar/sidebar";
 import Dashboard from "./dashboard";
@@ -16,11 +17,17 @@ import axios from "axios";
 
 function AppContent() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Handle "code" received from Spotify first
+  // Detect route changes and log them
+  useEffect(() => {
+    console.log("🔄 Route changed:", location.pathname);
+  }, [location.pathname]);
+
+  // Handle "code" received from Spotify
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
@@ -28,14 +35,12 @@ function AppContent() {
     if (code) {
       console.log("Received code from Spotify:", code);
       window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
-      return;
     }
   }, []);
 
-  // Extract and store tokens
+  // Extract & store tokens
   useEffect(() => {
     const hash = window.location.hash;
-    console.log("Raw URL hash:", hash);
 
     if (hash.startsWith("#")) {
       const query = new URLSearchParams(hash.substring(1)); // Remove #
@@ -68,11 +73,10 @@ function AppContent() {
       }
     }
 
-    // Set loading to false after checking tokens
-    setIsLoading(false);
+    setIsLoading(false); // Allow UI to load after checking tokens
   }, []);
 
-  // Automatically refresh access token when it expires
+  // Auto-refresh access token
   useEffect(() => {
     if (!refreshToken || isLoading) return;
 
@@ -112,7 +116,7 @@ function AppContent() {
           localStorage.removeItem("jwt_token");
           setToken("");
           setRefreshToken("");
-          window.location.replace("https://playrofficial.netlify.app/#/login");
+          navigate("/login");
         }
       }
     };
@@ -134,7 +138,7 @@ function AppContent() {
   return (
     <div className="main-body">
       {token && location.pathname !== "/login" && <Sidebar />}
-      <Routes>
+      <Routes key={location.pathname}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/playlists" element={<Playlists />} />

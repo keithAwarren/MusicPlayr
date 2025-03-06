@@ -4,12 +4,12 @@ import "./sidebarButton.css";
 
 function SidebarButton({ to, title, icon, onClick }) {
   const location = useLocation();
-  const isActive = location.pathname === to || location.hash === `#${to}`;
+  const isActive = location.pathname === to;
 
   const btnClass = isActive ? "btn-body active" : "btn-body";
 
   return to ? (
-    <Link to={`#${to}`}> {/* Ensure hash-based navigation */}
+    <Link to={to}>
       <div className={btnClass}>
         <IconContext.Provider value={{ size: "30px", className: "btn-icon" }}>
           {icon}

@@ -13,7 +13,9 @@ function Sidebar() {
 
   const handleLogout = () => {
     window.localStorage.removeItem("spotify_access_token");
-    window.location.href = "/#/login"; // Fix logout redirect
+    window.localStorage.removeItem("spotify_refresh_token");
+    window.localStorage.removeItem("jwt_token");
+    window.location.replace("/#/login");
   };
 
   useEffect(() => {
@@ -29,9 +31,9 @@ function Sidebar() {
         <img src={image} className="profile-img" alt="Profile" />
         <div className="welcome-text">Welcome, {username}!</div>
         <div className="mobile-btn flex">
-          <SidebarButton title="Player" to="/player" icon={<BsMusicPlayerFill />} />
-          <SidebarButton title="Playlists" to="/playlists" icon={<PiPlaylistFill />} />
           <SidebarButton title="Dashboard" to="/dashboard" icon={<MdDashboard />} />
+          <SidebarButton title="Playlists" to="/playlists" icon={<PiPlaylistFill />} />
+          <SidebarButton title="Player" to="/player" icon={<BsMusicPlayerFill />} />
         </div>
         <SidebarButton title="Log Out" icon={<SlLogin />} onClick={handleLogout} />
       </div>
