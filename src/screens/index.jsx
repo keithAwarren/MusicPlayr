@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import Sidebar from "../components/sidebar/sidebar";
 import Dashboard from "./dashboard";
@@ -14,36 +15,44 @@ import { setClientToken } from "../spotify";
 import axios from "axios";
 
 function Index() {
-  const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
-  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
+  const [token, setToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation(); // Capture the current route
 
+  // Handle "code" received from Spotify first
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
+    let urlParams = new URLSearchParams(window.location.search);
+    let code = urlParams.get("code");
 
     if (code) {
       console.log("Received code from Spotify:", code);
       window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
-      return; // Stop further execution
+      return;
     }
   }, []);
 
+  // Extract and store tokens
   useEffect(() => {
-    let hash = window.location.hash.substring(1); // Remove leading #
+    let hash = window.location.hash;
     console.log("Raw URL hash:", hash);
 
-    if (hash.includes("access_token")) {
-      const query = new URLSearchParams(hash);
-      const accessToken = query.get("access_token");
-      const refreshTokenFromUrl = query.get("refresh_token");
-      const jwtToken = query.get("jwt");
+    if (hash.startsWith("#")) {
+      hash = hash.substring(1); // Remove #
+    }
 
-      console.log("Parsed accessToken:", accessToken);
-      console.log("Parsed refreshToken:", refreshTokenFromUrl);
-      console.log("Parsed JWT:", jwtToken);
+    const query = new URLSearchParams(hash);
+    const accessToken = query.get("access_token");
+    const refreshTokenFromUrl = query.get("refresh_token");
+    const jwtToken = query.get("jwt");
 
-      if (accessToken && jwtToken) {
+    console.log("Parsed accessToken:", accessToken);
+    console.log("Parsed refreshToken:", refreshTokenFromUrl);
+    console.log("Parsed JWT:", jwtToken);
+
+    // Ensure tokens are stored before redirecting
+    if (accessToken && jwtToken) {
+      try {
         localStorage.setItem("spotify_access_token", accessToken);
         localStorage.setItem("jwt_token", jwtToken);
         setToken(accessToken);
@@ -54,32 +63,20 @@ function Index() {
           setRefreshToken(refreshTokenFromUrl);
         }
 
-        window.location.hash = ""; // Clear hash to prevent re-parsing
         setTimeout(() => {
           window.location.replace("https://playrofficial.netlify.app/#/dashboard");
         }, 100);
-      } else {
-        console.error("Missing tokens, staying on login page.");
-        setIsLoading(false);
+      } catch (error) {
+        console.error("Error accessing localStorage:", error);
       }
     } else {
-      // Retrieve tokens from localStorage instead of logging out
-      const storedToken = localStorage.getItem("spotify_access_token");
-      const storedJwtToken = localStorage.getItem("jwt_token");
-
-      if (storedToken && storedJwtToken) {
-        setToken(storedToken);
-        setClientToken(storedToken);
-      } else {
-        console.error("Stored tokens missing, redirecting to login.");
-        setTimeout(() => {
-          window.location.replace("https://playrofficial.netlify.app/#/login");
-        }, 500);
-      }
+      console.error("Missing tokens, staying on login page.");
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
   }, []);
 
+  // Automatically refresh access token when it expires
   useEffect(() => {
     if (!refreshToken || isLoading) return;
 
@@ -96,7 +93,9 @@ function Index() {
           "https://playrbackend.onrender.com/auth/refresh",
           { refresh_token: refreshToken },
           {
-            headers: { Authorization: `Bearer ${jwtToken}` },
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
           }
         );
 
@@ -117,9 +116,7 @@ function Index() {
           localStorage.removeItem("jwt_token");
           setToken("");
           setRefreshToken("");
-          setTimeout(() => {
-            window.location.replace("https://playrofficial.netlify.app/#/login");
-          }, 500);
+          window.location.replace("https://playrofficial.netlify.app/#/login");
         }
       }
     };
@@ -138,32 +135,20 @@ function Index() {
     return <div>Loading...</div>;
   }
 
-  console.log("Is Dashboard imported?", typeof Dashboard);
-  console.log("Is Sidebar imported?", typeof Sidebar);
-  console.log("Is Playlists imported?", typeof Playlists);
-  console.log("Is Player imported?", typeof Player);
-  console.log("Is Login imported?", typeof Login);
-
   return (
-    <>
-      {!token ? (
-        <Login />
-      ) : (
-        <Router>
-          <div className="main-body">
-            <Sidebar />
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/playlists" element={<Playlists />} />
-              <Route path="/player" element={<Player />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </div>
-        </Router>
-      )}
-    </>
+    <Router>
+      <div className="main-body">
+        {token && <Sidebar />}
+        <Routes key={location.pathname}>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/player" element={<Player />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
