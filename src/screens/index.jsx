@@ -15,10 +15,10 @@ import { setClientToken } from "../spotify";
 import axios from "axios";
 
 function AppContent() {
+  const location = useLocation();
   const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
   const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
 
   // Handle "code" received from Spotify first
   useEffect(() => {
@@ -59,18 +59,17 @@ function AppContent() {
             setRefreshToken(refreshTokenFromUrl);
           }
 
-          setTimeout(() => {
-            window.location.replace("https://playrofficial.netlify.app/#/dashboard");
-          }, 100);
+          console.log("Tokens successfully stored!");
         } catch (error) {
           console.error("Error accessing localStorage:", error);
         }
       } else {
         console.error("Missing tokens, staying on login page.");
-        setIsLoading(false);
-        return;
       }
     }
+
+    // Set loading to false after checking tokens
+    setIsLoading(false);
   }, []);
 
   // Automatically refresh access token when it expires
@@ -126,10 +125,10 @@ function AppContent() {
     return () => clearInterval(interval);
   }, [refreshToken, isLoading]);
 
-  console.log("Rendering with token:", token);
+  console.log("🎯 Rendering with token:", token);
 
   if (isLoading) {
-    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>Loading...</div>;
+    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>⏳ Loading...</div>;
   }
 
   return (
