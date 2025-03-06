@@ -18,19 +18,21 @@ function Index() {
   const [refreshToken, setRefreshToken] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Handle "code" received from Spotify first
+  // Handle code from Spotify and exchange for tokens
   useEffect(() => {
     let urlParams = new URLSearchParams(window.location.search);
     let code = urlParams.get("code");
 
     if (code) {
       console.log("Received code from Spotify:", code);
-      window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
-      return; // Stop further execution since we are redirecting
+      window.location.replace(
+        `https://playrbackend.onrender.com/auth/callback?code=${code}`
+      );
+      return;
     }
   }, []);
 
-  // ✅ 2️⃣ Extract and store tokens
+  // Extract & store tokens on first load
   useEffect(() => {
     let hash = window.location.hash;
     console.log("Raw URL hash:", hash);
@@ -48,7 +50,6 @@ function Index() {
     console.log("Parsed refreshToken:", refreshTokenFromUrl);
     console.log("Parsed JWT:", jwtToken);
 
-    // Ensure tokens are stored before redirecting
     if (accessToken && jwtToken) {
       try {
         localStorage.setItem("spotify_access_token", accessToken);
@@ -61,7 +62,6 @@ function Index() {
           setRefreshToken(refreshTokenFromUrl);
         }
 
-        // Wait before redirecting to avoid race conditions
         setTimeout(() => {
           window.location.replace("https://playrofficial.netlify.app/#/dashboard");
         }, 100);
@@ -70,12 +70,28 @@ function Index() {
       }
     } else {
       console.error("Missing tokens, staying on login page.");
-      setIsLoading(false);
-      return;
     }
+    setIsLoading(false);
   }, []);
 
-  // Automatically refresh access token when it expires
+  // Ensure stored tokens persist on refresh
+  useEffect(() => {
+    const storedToken = localStorage.getItem("spotify_access_token");
+    const storedJwtToken = localStorage.getItem("jwt_token");
+    const storedRefreshToken = localStorage.getItem("spotify_refresh_token");
+
+    if (storedToken && storedJwtToken) {
+      setToken(storedToken);
+      setClientToken(storedToken);
+      setRefreshToken(storedRefreshToken || "");
+    } else {
+      console.error("Stored tokens missing, redirecting to login.");
+      window.location.replace("https://playrofficial.netlify.app/#/login");
+    }
+    setIsLoading(false);
+  }, []);
+
+  // Auto-refresh access token when it expires
   useEffect(() => {
     if (!refreshToken || isLoading) return;
 
@@ -110,7 +126,6 @@ function Index() {
         console.error("Error refreshing access token:", error);
 
         if (error.response && error.response.status === 401) {
-          // Clear tokens and redirect to login if JWT is invalid or expired
           localStorage.removeItem("spotify_access_token");
           localStorage.removeItem("spotify_refresh_token");
           localStorage.removeItem("jwt_token");
@@ -124,22 +139,23 @@ function Index() {
     const interval = setInterval(() => {
       console.log("Refreshing access token...");
       refreshAccessToken();
-    }, 3500 * 1000); // Refresh every 3500 seconds (slightly before token expiration)
+    }, 3500 * 1000); // Refresh every ~58 minutes
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, [refreshToken, isLoading]);
 
   console.log("Rendering with token:", token);
 
+  // Prevent UI flickering while checking tokens
   if (isLoading) {
-    return <div>Loading...</div>; // Prevents UI flickering while processing tokens
+    return <div>Loading...</div>;
   }
 
-console.log("Is Dashboard imported?", typeof Dashboard);
-console.log("Is Sidebar imported?", typeof Sidebar);
-console.log("Is Playlists imported?", typeof Playlists);
-console.log("Is Player imported?", typeof Player);
-console.log("Is Login imported?", typeof Login);
+  console.log("Is Dashboard imported?", typeof Dashboard);
+  console.log("Is Sidebar imported?", typeof Sidebar);
+  console.log("Is Playlists imported?", typeof Playlists);
+  console.log("Is Player imported?", typeof Player);
+  console.log("Is Login imported?", typeof Login);
 
   return !token ? (
     <Login />
