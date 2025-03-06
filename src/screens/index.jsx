@@ -14,16 +14,16 @@ import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
 import axios from "axios";
 
-function AppContent() {
+function Index() {
   const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
   const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation(); // Capture the current route
+  const location = useLocation();
 
   // Handle "code" received from Spotify first
   useEffect(() => {
-    let urlParams = new URLSearchParams(window.location.search);
-    let code = urlParams.get("code");
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
     if (code) {
       console.log("Received code from Spotify:", code);
@@ -34,44 +34,42 @@ function AppContent() {
 
   // Extract and store tokens
   useEffect(() => {
-    let hash = window.location.hash;
+    const hash = window.location.hash;
     console.log("Raw URL hash:", hash);
 
     if (hash.startsWith("#")) {
-      hash = hash.substring(1); // Remove #
-    }
+      const query = new URLSearchParams(hash.substring(1)); // Remove #
+      const accessToken = query.get("access_token");
+      const refreshTokenFromUrl = query.get("refresh_token");
+      const jwtToken = query.get("jwt");
 
-    const query = new URLSearchParams(hash);
-    const accessToken = query.get("access_token");
-    const refreshTokenFromUrl = query.get("refresh_token");
-    const jwtToken = query.get("jwt");
+      console.log("Parsed accessToken:", accessToken);
+      console.log("Parsed refreshToken:", refreshTokenFromUrl);
+      console.log("Parsed JWT:", jwtToken);
 
-    console.log("Parsed accessToken:", accessToken);
-    console.log("Parsed refreshToken:", refreshTokenFromUrl);
-    console.log("Parsed JWT:", jwtToken);
+      if (accessToken && jwtToken) {
+        try {
+          localStorage.setItem("spotify_access_token", accessToken);
+          localStorage.setItem("jwt_token", jwtToken);
+          setToken(accessToken);
+          setClientToken(accessToken);
 
-    if (accessToken && jwtToken) {
-      try {
-        localStorage.setItem("spotify_access_token", accessToken);
-        localStorage.setItem("jwt_token", jwtToken);
-        setToken(accessToken);
-        setClientToken(accessToken);
+          if (refreshTokenFromUrl) {
+            localStorage.setItem("spotify_refresh_token", refreshTokenFromUrl);
+            setRefreshToken(refreshTokenFromUrl);
+          }
 
-        if (refreshTokenFromUrl) {
-          localStorage.setItem("spotify_refresh_token", refreshTokenFromUrl);
-          setRefreshToken(refreshTokenFromUrl);
+          setTimeout(() => {
+            window.location.replace("https://playrofficial.netlify.app/#/dashboard");
+          }, 100);
+        } catch (error) {
+          console.error("Error accessing localStorage:", error);
         }
-
-        setTimeout(() => {
-          window.location.replace("https://playrofficial.netlify.app/#/dashboard");
-        }, 100);
-      } catch (error) {
-        console.error("Error accessing localStorage:", error);
+      } else {
+        console.error("Missing tokens, staying on login page.");
+        setIsLoading(false);
+        return;
       }
-    } else {
-      console.error("Missing tokens, staying on login page.");
-      setIsLoading(false);
-      return;
     }
   }, []);
 
@@ -135,24 +133,18 @@ function AppContent() {
   }
 
   return (
-    <div className="main-body">
-      {token && location.pathname !== "/login" && <Sidebar />}
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/player" element={<Player />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </div>
-  );
-}
-
-function Index() {
-  return (
     <Router>
-      <AppContent />
+      <div className="main-body">
+        {token && location.pathname !== "/login" && <Sidebar />}
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/player" element={<Player />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
