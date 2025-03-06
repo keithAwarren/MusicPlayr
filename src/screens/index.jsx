@@ -153,12 +153,12 @@ function Index() {
           <div className="main-body">
             <Sidebar />
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" />} />
-              <Route path="/login" element={<Navigate to="/dashboard" />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/playlists" element={<Playlists />} />
               <Route path="/player" element={<Player />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="*" element={<Navigate to="/dashboard" />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </div>
         </Router>
