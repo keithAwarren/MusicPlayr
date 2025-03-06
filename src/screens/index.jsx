@@ -139,7 +139,7 @@ function AppContent() {
     <div className="main-body">
       {token && location.pathname !== "/login" && <Sidebar />}
       <Routes key={location.pathname}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/player" element={<Player />} />
