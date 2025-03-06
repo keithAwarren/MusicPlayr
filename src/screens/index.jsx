@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
 import axios from "axios";
 
-function Index() {
+function AppContent() {
   const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
   const [isLoading, setIsLoading] = useState(true);
@@ -129,22 +129,28 @@ function Index() {
   console.log("Rendering with token:", token);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>Loading...</div>;
   }
 
   return (
+    <div className="main-body">
+      {token && location.pathname !== "/login" && <Sidebar />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/playlists" element={<Playlists />} />
+        <Route path="/player" element={<Player />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </div>
+  );
+}
+
+function Index() {
+  return (
     <Router>
-      <div className="main-body">
-        {token && location.pathname !== "/login" && <Sidebar />}
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/player" element={<Player />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </div>
+      <AppContent />
     </Router>
   );
 }
