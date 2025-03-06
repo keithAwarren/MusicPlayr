@@ -14,9 +14,9 @@ import { useEffect, useState } from "react";
 import { setClientToken } from "../spotify";
 import axios from "axios";
 
-function Index() {
-  const [token, setToken] = useState("");
-  const [refreshToken, setRefreshToken] = useState("");
+function AppContent() {
+  const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
+  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation(); // Capture the current route
 
@@ -50,7 +50,6 @@ function Index() {
     console.log("Parsed refreshToken:", refreshTokenFromUrl);
     console.log("Parsed JWT:", jwtToken);
 
-    // Ensure tokens are stored before redirecting
     if (accessToken && jwtToken) {
       try {
         localStorage.setItem("spotify_access_token", accessToken);
@@ -136,18 +135,24 @@ function Index() {
   }
 
   return (
+    <div className="main-body">
+      {token && location.pathname !== "/login" && <Sidebar />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/playlists" element={<Playlists />} />
+        <Route path="/player" element={<Player />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </div>
+  );
+}
+
+function Index() {
+  return (
     <Router>
-      <div className="main-body">
-        {token && <Sidebar />}
-        <Routes key={location.pathname}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/player" element={<Player />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </div>
+      <AppContent />
     </Router>
   );
 }
