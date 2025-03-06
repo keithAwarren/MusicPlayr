@@ -3,17 +3,13 @@ import { IconContext } from "react-icons";
 import "./sidebarButton.css";
 
 function SidebarButton({ to, title, icon, onClick }) {
-  // Access current URL
   const location = useLocation();
+  const isActive = location.pathname === to || location.hash === `#${to}`;
 
-  // Check if current URL matches button's URL
-  const isActive = location.pathname === to;
-
-  // Decide CSS class depending on whether the button is active
   const btnClass = isActive ? "btn-body active" : "btn-body";
 
   return to ? (
-    <Link to={to}>
+    <Link to={`#${to}`}> {/* Ensure hash-based navigation */}
       <div className={btnClass}>
         <IconContext.Provider value={{ size: "30px", className: "btn-icon" }}>
           {icon}
