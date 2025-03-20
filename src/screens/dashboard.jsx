@@ -5,23 +5,17 @@ import axios from "axios";
 import apiClient from "../spotify";
 
 function Dashboard() {
+
   const navigate = useNavigate();
   const [username, setUsername] = useState("User");
-  const [profileImage, setProfileImage] = useState("https://picsum.photos/id/237/200/300");
+  const [profileImage, setProfileImage] = useState(
+    "https://picsum.photos/id/237/200/300"
+  );
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
   const [topArtists, setTopArtists] = useState([]);
 
-  // Get JWT token from local storage
-  const jwtToken = localStorage.getItem("jwt_token");
-
   useEffect(() => {
-    if (!jwtToken) {
-      console.error("No JWT token found, redirecting to login...");
-      navigate("/login"); // Redirect to login if no token
-      return;
-    }
-
     const fetchUserData = async () => {
       try {
         const response = await apiClient.get("me");
@@ -38,28 +32,50 @@ function Dashboard() {
     fetchTopArtists();
   }, []);
 
-  // Helper function to make authorized API requests
-  const makeAuthorizedRequest = async (endpoint, setterFunction) => {
+  const fetchRecentlyPlayed = async () => {
     try {
-      const response = await axios.get(`https://playrbackend.onrender.com/api/analytics/${endpoint}`, {
-        headers: { Authorization: `Bearer ${jwtToken}` },
-      });
-      setterFunction(response.data);
+      const accessToken = localStorage.getItem("spotify_access_token");
+      const response = await axios.get(
+        "https://playrbackend.onrender.com/api/analytics/recently-played",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setRecentlyPlayed(response.data);
     } catch (error) {
-      console.error(`Error fetching ${endpoint}:`, error);
-      if (error.response?.status === 401) {
-        console.error("Unauthorized - clearing tokens and redirecting to login");
-        localStorage.removeItem("spotify_access_token");
-        localStorage.removeItem("jwt_token");
-        localStorage.removeItem("spotify_refresh_token");
-        navigate("/login");
-      }
+      console.error("Error fetching recently played tracks:", error);
     }
   };
 
-  const fetchRecentlyPlayed = () => makeAuthorizedRequest("recently-played", setRecentlyPlayed);
-  const fetchTopTracks = () => makeAuthorizedRequest("top-tracks", setTopTracks);
-  const fetchTopArtists = () => makeAuthorizedRequest("top-artists", setTopArtists);
+  const fetchTopTracks = async () => {
+    try {
+      const accessToken = localStorage.getItem("spotify_access_token");
+      const response = await axios.get(
+        "https://playrbackend.onrender.com/api/analytics/top-tracks",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setTopTracks(response.data);
+    } catch (error) {
+      console.error("Error fetching top tracks:", error);
+    }
+  };
+
+  const fetchTopArtists = async () => {
+    try {
+      const accessToken = localStorage.getItem("spotify_access_token");
+      const response = await axios.get(
+        "https://playrbackend.onrender.com/api/analytics/top-artists",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+      setTopArtists(response.data);
+    } catch (error) {
+      console.error("Error fetching top artists:", error);
+    }
+  };
 
   const playTrack = (trackUri) => {
     navigate("/MusicPlayr/player", { state: { uri: trackUri } });
@@ -69,7 +85,11 @@ function Dashboard() {
     <div className="screen-container">
       {/* Profile Section */}
       <div className="dashboard-header">
-        <img src={profileImage} alt="Profile" className="dashboard-profile-img" />
+        <img
+          src={profileImage}
+          alt="Profile"
+          className="dashboard-profile-img"
+        />
         <h1 className="dashboard-title">{username}'s Dashboard</h1>
       </div>
 
@@ -79,17 +99,24 @@ function Dashboard() {
         <div className="widget-card">
           <div className="widget-header">
             <h4>Recently Played</h4>
-            <button onClick={fetchRecentlyPlayed} className="widget-button">Refresh</button>
+            <button onClick={fetchRecentlyPlayed} className="widget-button">
+              Refresh
+            </button>
           </div>
           <div className="widget-content">
             <ul>
               {recentlyPlayed.length > 0 ? (
                 recentlyPlayed.map((track) => (
                   <li key={track.track.id} onClick={() => playTrack(track.track.uri)}>
-                    <img src={track.track.album.images[0].url} alt={track.track.name} />
+                    <img
+                      src={track.track.album.images[0].url}
+                      alt={track.track.name}
+                    />
                     <span className="track-info">
                       <p className="track-title">{track.track.name}</p>
-                      <p className="track-artist">{track.track.artists.map(artist => artist.name).join(", ")}</p>
+                      <p className="track-artist">
+                        {track.track.artists.map(artist => artist.name).join(", ")}
+                      </p>
                     </span>
                   </li>
                 ))
@@ -104,7 +131,9 @@ function Dashboard() {
         <div className="widget-card">
           <div className="widget-header">
             <h4>Top Tracks</h4>
-            <button onClick={fetchTopTracks} className="widget-button">Refresh</button>
+            <button onClick={fetchTopTracks} className="widget-button">
+              Refresh
+            </button>
           </div>
           <div className="widget-content">
             <ul>
@@ -114,7 +143,9 @@ function Dashboard() {
                     <img src={track.album.images[0].url} alt={track.name} />
                     <span className="track-info">
                       <p className="track-title">{track.name}</p>
-                      <p className="track-artist">{track.artists.map(artist => artist.name).join(", ")}</p>
+                      <p className="track-artist">
+                        {track.artists.map(artist => artist.name).join(", ")}
+                      </p>
                     </span>
                   </li>
                 ))
@@ -129,7 +160,9 @@ function Dashboard() {
         <div className="widget-card">
           <div className="widget-header">
             <h4>Top Artists</h4>
-            <button onClick={fetchTopArtists} className="widget-button">Refresh</button>
+            <button onClick={fetchTopArtists} className="widget-button">
+              Refresh
+            </button>
           </div>
           <div className="widget-content">
             <ul>
