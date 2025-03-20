@@ -34,18 +34,32 @@ function Dashboard() {
 
   const fetchRecentlyPlayed = async () => {
     try {
-      const accessToken = localStorage.getItem("spotify_access_token");
+      const jwtToken = localStorage.getItem("jwt_token"); // Use JWT instead
+      if (!jwtToken) {
+        console.error("No JWT token found, redirecting to login...");
+        navigate("/login");
+        return;
+      }
+  
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/recently-played",
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${jwtToken}` }, // Send JWT token
         }
       );
       setRecentlyPlayed(response.data);
     } catch (error) {
       console.error("Error fetching recently played tracks:", error);
+      if (error.response?.status === 401) {
+        console.warn("Unauthorized - clearing tokens and redirecting...");
+        localStorage.removeItem("jwt_token");
+        localStorage.removeItem("spotify_access_token");
+        localStorage.removeItem("spotify_refresh_token");
+        navigate("/login");
+      }
     }
   };
+  
 
   const fetchTopTracks = async () => {
     try {
