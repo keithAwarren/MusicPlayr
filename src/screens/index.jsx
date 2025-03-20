@@ -18,22 +18,23 @@ import axios from "axios";
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
+  
   const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
+  const [jwtToken, setJwtToken] = useState(localStorage.getItem("jwt_token") || "");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Detect route changes and log them
+  // Detect route changes (for debugging)
   useEffect(() => {
-    console.log("🔄 Route changed:", location.pathname);
+    console.log("Navigated to:", location.pathname);
   }, [location.pathname]);
 
-  // Handle "code" received from Spotify
+  //  Handle "code" received from Spotify
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
 
     if (code) {
-      console.log("Received code from Spotify:", code);
       window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
     }
   }, []);
@@ -43,20 +44,17 @@ function AppContent() {
     const hash = window.location.hash;
 
     if (hash.startsWith("#")) {
-      const query = new URLSearchParams(hash.substring(1)); // Remove #
+      const query = new URLSearchParams(hash.substring(1));
       const accessToken = query.get("access_token");
       const refreshTokenFromUrl = query.get("refresh_token");
-      const jwtToken = query.get("jwt");
+      const jwtFromUrl = query.get("jwt");
 
-      console.log("Parsed accessToken:", accessToken);
-      console.log("Parsed refreshToken:", refreshTokenFromUrl);
-      console.log("Parsed JWT:", jwtToken);
-
-      if (accessToken && jwtToken) {
+      if (accessToken && jwtFromUrl) {
         try {
           localStorage.setItem("spotify_access_token", accessToken);
-          localStorage.setItem("jwt_token", jwtToken);
+          localStorage.setItem("jwt_token", jwtFromUrl);
           setToken(accessToken);
+          setJwtToken(jwtFromUrl);
           setClientToken(accessToken);
 
           if (refreshTokenFromUrl) {
@@ -69,11 +67,12 @@ function AppContent() {
           console.error("Error accessing localStorage:", error);
         }
       } else {
-        console.error("Missing tokens, staying on login page.");
+        console.error("Missing tokens, redirecting to login.");
+        navigate("/login");
       }
     }
 
-    setIsLoading(false); // Allow UI to load after checking tokens
+    setIsLoading(false);
   }, []);
 
   // Auto-refresh access token
@@ -81,10 +80,9 @@ function AppContent() {
     if (!refreshToken || isLoading) return;
 
     const refreshAccessToken = async () => {
-      const jwtToken = localStorage.getItem("jwt_token");
-
       if (!jwtToken) {
-        console.error("Missing JWT token, cannot refresh access token.");
+        console.error("No JWT found, redirecting to login.");
+        navigate("/login");
         return;
       }
 
@@ -100,7 +98,6 @@ function AppContent() {
         );
 
         const { access_token } = response.data;
-        console.log("New access token:", access_token);
 
         if (access_token) {
           localStorage.setItem("spotify_access_token", access_token);
@@ -116,23 +113,28 @@ function AppContent() {
           localStorage.removeItem("jwt_token");
           setToken("");
           setRefreshToken("");
+          setJwtToken("");
           navigate("/login");
         }
       }
     };
 
     const interval = setInterval(() => {
-      console.log("Refreshing access token...");
       refreshAccessToken();
     }, 3500 * 1000);
 
     return () => clearInterval(interval);
   }, [refreshToken, isLoading]);
 
-  console.log("🎯 Rendering with token:", token);
-
+  // Show loading state
   if (isLoading) {
-    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>⏳ Loading...</div>;
+    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>Loading...</div>;
+  }
+
+  // Redirect to login if JWT is missing
+  if (!jwtToken) {
+    console.error("JWT missing, redirecting to login.");
+    return <Navigate to="/login" replace />;
   }
 
   return (

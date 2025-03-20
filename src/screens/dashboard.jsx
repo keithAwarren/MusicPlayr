@@ -4,8 +4,6 @@ import "./dashboard.css";
 import axios from "axios";
 import apiClient from "../spotify";
 
-console.log("Is the dashboard component rendering")
-
 function Dashboard() {
 
   const navigate = useNavigate();
