@@ -34,7 +34,7 @@ function Dashboard() {
 
   const fetchRecentlyPlayed = async () => {
     try {
-      const jwtToken = localStorage.getItem("jwt_token"); // Use JWT instead
+      const jwtToken = localStorage.getItem("spotify_access_token"); 
       if (!jwtToken) {
         console.error("No JWT token found, redirecting to login...");
         navigate("/login");
