@@ -19,7 +19,7 @@ function Playlists() {
 
   // Navigate to the /player route and pass the playlist ID as part of the state
   const playPlaylist = (id) => {
-    navigate("/MusicPlayr/player", { state: { id: id } });
+    navigate("/player", { state: { id: id } });
   };
 
   return (
