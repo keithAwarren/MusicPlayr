@@ -35,6 +35,8 @@ function Dashboard() {
   const fetchRecentlyPlayed = async () => {
     try {
       const jwtToken = localStorage.getItem("jwt_token"); 
+      const accessToken = localStorage.getItem("spotify_access_token");
+
       if (!jwtToken) {
         console.error("No JWT token found, redirecting to login...");
         navigate("/login");
@@ -46,7 +48,7 @@ function Dashboard() {
         {
           headers: { 
             Authorization: `Bearer ${jwtToken}`,
-            "spotify-access-token": spotifyAccessToken, 
+            "spotify-access-token": accessToken, 
           }, // Send JWT token
         }
       );
