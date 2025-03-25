@@ -36,12 +36,6 @@ function Dashboard() {
     try {
       const jwtToken = localStorage.getItem("jwt_token"); 
       const accessToken = localStorage.getItem("spotify_access_token");
-
-      if (!jwtToken) {
-        console.error("No JWT token found, redirecting to login...");
-        navigate("/login");
-        return;
-      }
   
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/recently-played",
@@ -49,7 +43,7 @@ function Dashboard() {
           headers: { 
             Authorization: `Bearer ${jwtToken}`,
             "spotify-access-token": accessToken, 
-          }, // Send JWT token
+          },
         }
       );
       setRecentlyPlayed(response.data);
@@ -57,9 +51,7 @@ function Dashboard() {
       console.error("Error fetching recently played tracks:", error);
       if (error.response?.status === 401) {
         console.warn("Unauthorized - clearing tokens and redirecting...");
-        localStorage.removeItem("jwt_token");
-        localStorage.removeItem("spotify_access_token");
-        localStorage.removeItem("spotify_refresh_token");
+        localStorage.clear();
         navigate("/login");
       }
     }
@@ -68,11 +60,16 @@ function Dashboard() {
 
   const fetchTopTracks = async () => {
     try {
+      const jwtToken = localStorage.getItem("jwt_token")
       const accessToken = localStorage.getItem("spotify_access_token");
+
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/top-tracks",
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { 
+            Authorization: `Bearer ${jwtToken}`,
+            "spotify-access-token": accessToken, 
+          },
         }
       );
       setTopTracks(response.data);
@@ -83,11 +80,16 @@ function Dashboard() {
 
   const fetchTopArtists = async () => {
     try {
+      const jwtToken = localStorage.getItem("jwt_token")
       const accessToken = localStorage.getItem("spotify_access_token");
+
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/top-artists",
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { 
+            Authorization: `Bearer ${jwtToken}`,
+            "spotify-access-token": accessToken,
+          },
         }
       );
       setTopArtists(response.data);
