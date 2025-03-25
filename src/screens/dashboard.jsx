@@ -44,7 +44,10 @@ function Dashboard() {
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/recently-played",
         {
-          headers: { Authorization: `Bearer ${jwtToken}` }, // Send JWT token
+          headers: { 
+            Authorization: `Bearer ${jwtToken}`,
+            "spotify-access-token": spotifyAccessToken, 
+          }, // Send JWT token
         }
       );
       setRecentlyPlayed(response.data);
