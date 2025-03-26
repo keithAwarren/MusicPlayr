@@ -18,13 +18,16 @@ import axios from "axios";
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [token, setToken] = useState(localStorage.getItem("spotify_access_token") || "");
-  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("spotify_refresh_token") || "");
+  const [token, setToken] = useState(
+    localStorage.getItem("spotify_access_token") || ""
+  );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("spotify_refresh_token") || ""
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Detect route changes and log them
-  useEffect(() => {
-  }, [location.pathname]);
+  useEffect(() => {}, [location.pathname]);
 
   // Handle "code" received from Spotify
   useEffect(() => {
@@ -32,7 +35,9 @@ function AppContent() {
     const code = urlParams.get("code");
 
     if (code) {
-      window.location.replace(`https://playrbackend.onrender.com/auth/callback?code=${code}`);
+      window.location.replace(
+        `https://playrbackend.onrender.com/auth/callback?code=${code}`
+      );
     }
   }, []);
 
@@ -122,7 +127,11 @@ function AppContent() {
   }, [refreshToken, isLoading]);
 
   if (isLoading) {
-    return <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>⏳ Loading...</div>;
+    return (
+      <div style={{ color: "white", textAlign: "center", fontSize: "24px" }}>
+        ⏳ Loading...
+      </div>
+    );
   }
 
   return (
@@ -131,10 +140,17 @@ function AppContent() {
       <Routes key={location.pathname}>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/playlists" element={<Playlists />} />
-        <Route path="/player" element={<Player />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
+        {token ? (
+          <>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/playlists" element={<Playlists />} />
+            <Route path="/player" element={<Player />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        )}
       </Routes>
     </div>
   );
