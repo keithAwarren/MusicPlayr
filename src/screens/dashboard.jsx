@@ -99,7 +99,7 @@ function Dashboard() {
   };
 
   const playTrack = (trackUri) => {
-    navigate("/MusicPlayr/player", { state: { uri: trackUri } });
+    navigate("/player", { state: { uri: trackUri } });
   };
 
   return (
