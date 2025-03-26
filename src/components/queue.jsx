@@ -13,12 +13,27 @@ function Queue({ tracks, setCurrentIndex, currentTrack }) {
       const fetchLyrics = async () => {
         try {
           setLoading(true);
-          const response = await axios.get("https://playrbackend.onrender.com/api/lyrics", {
-            params: {
-              trackName: currentTrack.name,
-              artistName: currentTrack.artists[0]?.name,
-            },
-          });
+
+          const jwtToken = localStorage.getItem("jwt_token");
+
+          if (!jwtToken) {
+            console.warn("Missing JWT token");
+            setLyrics("Authorization error.");
+            return;
+          }
+
+          const response = await axios.get(
+            "https://playrbackend.onrender.com/api/lyrics",
+            {
+              params: {
+                trackName: currentTrack.name,
+                artistName: currentTrack.artists[0]?.name,
+              },
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          );
           setLyrics(response.data.lyrics || "Lyrics not available.");
         } catch (error) {
           console.error("Error fetching lyrics:", error);
