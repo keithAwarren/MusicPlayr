@@ -15,7 +15,7 @@ function AlbumInfo({ album }) {
       return "Head to the Playlist page and choose a playlist :)";
     }
 
-    return `${album.name || "Unknown Album"} is an ${
+    return `${album.name || "Unknown Album"} is a(n) ${
       album.album_type || ""
     } by ${artists.length > 0 ? artists.join(", ") : "Unknown Artist"} with ${
       album.total_tracks || 0
