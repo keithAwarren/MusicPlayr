@@ -3,7 +3,7 @@ import apiClient from "../../spotify";
 import WidgetCard from "./widgetCard";
 import "./widgets.css";
 
-function Widgets({ artistID, onPlaylistClick, onArtistClick, onAlbumClick }) {
+function Widgets({ artistID, onPlaylistClick, onArtistClick, onTrackClick, onAlbumClick }) {
   const [topTracks, setTopTracks] = useState([]); // State to hold top tracks
   const [curatedPlaylists, setCuratedPlaylists] = useState([]); // State to hold curated playlists
   const [newRelease, setNewRelease] = useState([]); // State to hold new releases
@@ -46,7 +46,7 @@ function Widgets({ artistID, onPlaylistClick, onArtistClick, onAlbumClick }) {
       <WidgetCard
         title="Top Tracks"
         items={topTracks}
-        onItemClick={(track) => console.log("Selected track:", track)}
+        onItemClick={onTrackClick}
       />
       {/* Render curated playlists widget */}
       <WidgetCard

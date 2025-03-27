@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../spotify";
 import SongCard from "../components/songCard";
 import Queue from "../components/queue";
@@ -9,6 +9,7 @@ import "./player.css";
 
 function Player() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [tracks, setTracks] = useState([]); // Stores the playlist tracks OR single track
   const [currentTrack, setCurrentTrack] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,6 +53,16 @@ function Player() {
         />
         <Widgets
           artistID={currentTrack?.album?.artists[0]?.id}
+          onPlaylistClick={(playlist) =>
+            navigate("/player", { state: { id: playlist.id } })
+          }
+          onArtistClick={() => {}}
+          onAlbumClick={(album) =>
+            navigate("/player", { state: { id: playlist.id } })
+          }
+          onTrackClick={(track) =>
+            navigate("/player", { state: { id: playlist.id } })
+          }
         />
       </div>
       <div className="right-player-body songCard-mobile">
