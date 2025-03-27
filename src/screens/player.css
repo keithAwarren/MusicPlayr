@@ -250,6 +250,10 @@
   margin-top: 15px;
 }
 
+.favorite-button:hover {
+  background-color: rgba(185, 29, 185, 0.254);
+}
+
 /* queue/up next */
 .queue-container {
   width: 100%;
