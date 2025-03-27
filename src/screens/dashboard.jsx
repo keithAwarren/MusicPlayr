@@ -5,7 +5,6 @@ import axios from "axios";
 import apiClient from "../spotify";
 
 function Dashboard() {
-
   const navigate = useNavigate();
   const [username, setUsername] = useState("User");
   const [profileImage, setProfileImage] = useState(
@@ -13,7 +12,7 @@ function Dashboard() {
   );
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
-  const [topArtists, setTopArtists] = useState([]);
+  const [favoritedTracks, setFavoritedTracks] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,20 +28,20 @@ function Dashboard() {
     fetchUserData();
     fetchRecentlyPlayed();
     fetchTopTracks();
-    fetchTopArtists();
+    fetchFavoritedTracks();
   }, []);
 
   const fetchRecentlyPlayed = async () => {
     try {
-      const jwtToken = localStorage.getItem("jwt_token"); 
+      const jwtToken = localStorage.getItem("jwt_token");
       const accessToken = localStorage.getItem("spotify_access_token");
-  
+
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/recently-played",
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${jwtToken}`,
-            "spotify-access-token": accessToken, 
+            "spotify-access-token": accessToken,
           },
         }
       );
@@ -56,19 +55,18 @@ function Dashboard() {
       }
     }
   };
-  
 
   const fetchTopTracks = async () => {
     try {
-      const jwtToken = localStorage.getItem("jwt_token")
+      const jwtToken = localStorage.getItem("jwt_token");
       const accessToken = localStorage.getItem("spotify_access_token");
 
       const response = await axios.get(
         "https://playrbackend.onrender.com/api/analytics/top-tracks",
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${jwtToken}`,
-            "spotify-access-token": accessToken, 
+            "spotify-access-token": accessToken,
           },
         }
       );
@@ -78,23 +76,36 @@ function Dashboard() {
     }
   };
 
-  const fetchTopArtists = async () => {
+  const fetchFavoritedTracks = async () => {
     try {
-      const jwtToken = localStorage.getItem("jwt_token")
+      const jwtToken = localStorage.getItem("jwt_token");
       const accessToken = localStorage.getItem("spotify_access_token");
 
       const response = await axios.get(
-        "https://playrbackend.onrender.com/api/analytics/top-artists",
+        "https://playrbackend.onrender.com/api/favorites/track",
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${jwtToken}`,
             "spotify-access-token": accessToken,
           },
         }
       );
-      setTopArtists(response.data);
+
+      const trackPromises = response.data.map(async (fav) => {
+        const trackDetails = await apiClient.get(`/tracks/${fav.item_id}`);
+        return {
+          id: fav.item_id,
+          name: trackDetails.data.name,
+          uri: trackDetails.data.uri,
+          artist: trackDetails.data.artists.map((a) => a.name).join(", "),
+          image: trackDetails.data.album.images?.[0]?.url,
+        };
+      });
+
+      const enrichedTracks = await Promise.all(trackPromises);
+      setFavoritedTracks(enrichedTracks);
     } catch (error) {
-      console.error("Error fetching top artists:", error);
+      console.error("Error fetching favorited tracks:", error);
     }
   };
 
@@ -128,7 +139,10 @@ function Dashboard() {
             <ul>
               {recentlyPlayed.length > 0 ? (
                 recentlyPlayed.map((track) => (
-                  <li key={track.track.id} onClick={() => playTrack(track.track.uri)}>
+                  <li
+                    key={track.track.id}
+                    onClick={() => playTrack(track.track.uri)}
+                  >
                     <img
                       src={track.track.album.images[0].url}
                       alt={track.track.name}
@@ -136,7 +150,7 @@ function Dashboard() {
                     <span className="track-info">
                       <p className="track-title">{track.track.name}</p>
                       <p className="track-artist">
-                        {track.track.artists.map(artist => artist.name).join(", ")}
+                        {track.track.artists.map((artist) => artist.name).join(", ")}
                       </p>
                     </span>
                   </li>
@@ -165,7 +179,7 @@ function Dashboard() {
                     <span className="track-info">
                       <p className="track-title">{track.name}</p>
                       <p className="track-artist">
-                        {track.artists.map(artist => artist.name).join(", ")}
+                        {track.artists.map((artist) => artist.name).join(", ")}
                       </p>
                     </span>
                   </li>
@@ -177,25 +191,28 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Top Artists */}
+        {/* Favorited Tracks */}
         <div className="widget-card">
           <div className="widget-header">
-            <h4>Top Artists</h4>
-            <button onClick={fetchTopArtists} className="widget-button">
+            <h4>Favorites</h4>
+            <button onClick={fetchFavoritedTracks} className="widget-button">
               Refresh
             </button>
           </div>
           <div className="widget-content">
             <ul>
-              {topArtists.length > 0 ? (
-                topArtists.map((artist) => (
-                  <li key={artist.id}>
-                    <img src={artist.images[0].url} alt={artist.name} />
-                    <p>{artist.name}</p>
+              {favoritedTracks.length > 0 ? (
+                favoritedTracks.map((track) => (
+                  <li key={track.id} onClick={() => playTrack(track.uri)}>
+                    <img src={track.image} alt={track.name} />
+                    <span className="track-info">
+                      <p className="track-title">{track.name}</p>
+                      <p className="track-artist">{track.artist}</p>
+                    </span>
                   </li>
                 ))
               ) : (
-                <p>No top artists available.</p>
+                <p>No favorited tracks available.</p>
               )}
             </ul>
           </div>
