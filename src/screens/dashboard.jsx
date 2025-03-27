@@ -114,7 +114,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="screen-container flex">
+    <div className="screen-container">
       {/* Profile Section */}
       <div className="dashboard-header">
         <img
