@@ -58,10 +58,10 @@ function Player() {
           }
           onArtistClick={() => {}}
           onAlbumClick={(album) =>
-            navigate("/player", { state: { id: playlist.id } })
+            navigate("/player", { state: { id: album.id } })
           }
           onTrackClick={(track) =>
-            navigate("/player", { state: { id: playlist.id } })
+            navigate("/player", { state: { uri: track.uri } })
           }
         />
       </div>
