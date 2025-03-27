@@ -37,7 +37,7 @@ function Queue({ tracks, setCurrentIndex, currentTrack }) {
           setLyrics(response.data.lyrics || "Lyrics not available.");
         } catch (error) {
           console.error("Error fetching lyrics:", error);
-          setLyrics("Error fetching lyrics.");
+          setLyrics("Lyrics Unavailable.");
         } finally {
           setLoading(false);
         }
