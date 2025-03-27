@@ -121,3 +121,9 @@
   color: #555;
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .dashboard-mobile {
+    padding-bottom: 1050px;
+  }
+}
