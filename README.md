@@ -25,11 +25,6 @@ Playr is a web application built for a simplified playlist player using the Spot
 - **Spotify Web API**: Provides access to Spotify's music data, including playlists, tracks, and artist information. This API is used to fetch and display music content within the app. [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
 - **Axios**: A promise-based HTTP client for making requests to the Spotify API. [Axios](https://axios-http.com/) is used to handle data fetching and API interactions.
 
-### Deployment
-
-- **GitHub Pages**: A hosting service provided by GitHub that allows you to deploy static sites directly from a GitHub repository.
-- **gh-pages**: A package for deploying to GitHub Pages. It helps automate the process of publishing applications to GitHub's hosting service.
-
 ### Tools
 
 - **Prettier**: A code formatter that enforces consistent coding styles across the project. [Prettier](https://prettier.io/)
@@ -46,4 +41,4 @@ Playr is a web application built for a simplified playlist player using the Spot
 
 Code can be viewed [here](https://github.com/keithAwarren/MusicPlayr)
 
-Github pages link [here](https://keithawarren.github.io/MusicPlayr/) **NOTE: User authentication required**
+Live link [here](https://playrofficial.netlify.app/#/login) **NOTE: User authentication required**
